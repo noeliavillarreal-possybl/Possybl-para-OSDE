@@ -311,6 +311,74 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
   <!-- CONTENT -->
   <div class="content" id="content">
 
+    <!-- BIENVENIDA -->
+    <div id="view-bienvenida" style="display:none">
+      <div style="min-height:calc(100vh - 52px);display:flex;align-items:center;justify-content:center;padding:32px 24px;background:var(--bg)">
+        <div style="max-width:800px;width:100%">
+
+          <!-- Header brand -->
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px">
+            <div style="background:var(--navy);border-radius:10px;padding:8px 16px;font-size:20px;font-weight:800;color:white">o<span style="color:var(--cyan)">S</span>de</div>
+            <div style="height:28px;width:1px;background:var(--border)"></div>
+            <div style="font-size:12px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:1px">Sistema Integrado de Crecimiento</div>
+          </div>
+
+          <!-- Title block -->
+          <div style="background:linear-gradient(135deg,var(--dnavy) 0%,var(--navy) 60%,#1a35c4 100%);border-radius:16px;padding:36px 40px;margin-bottom:20px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:rgba(38,194,255,.08)"></div>
+            <div style="position:absolute;bottom:-40px;right:60px;width:120px;height:120px;border-radius:50%;background:rgba(38,194,255,.05)"></div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--cyan);margin-bottom:10px">Herramienta de facilitación</div>
+            <div style="font-size:26px;font-weight:800;color:white;line-height:1.25;margin-bottom:12px">Mesa de Trabajo<br>por Segmento</div>
+            <div style="font-size:13.5px;color:rgba(255,255,255,.8);line-height:1.6;max-width:520px">Esta herramienta acompaña las sesiones de trabajo donde cada frente de ejecución baja el plan estratégico a un plan concreto: con iniciativas, acciones, responsables, métricas y roadmap.</div>
+          </div>
+
+          <!-- 4 steps -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+            ${[
+              ['1','20 min','Encuadre del segmento','Validar el norte del segmento y el peso relativo de cada foco estratégico.','var(--navy)'],
+              ['2','40 min','Inventario de iniciativas','Las iniciativas ya están pre-cargadas del plan estratégico. El equipo las revisa y puede sumar nuevas.','var(--bajas)'],
+              ['3','80 min','Profundización por iniciativa','Para cada iniciativa: alcance, responsables, acciones concretas con primer paso y criterio de cierre, métricas y horizonte.','var(--upgrade)'],
+              ['4','40 min','Roadmap y coordinación','Organizar las acciones por horizonte (30 / 60 / 90 días / 6m / +12m) y documentar lo que necesita la Mesa.','var(--exp)'],
+            ].map(([n,t,title,desc,col])=>`
+              <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                  <div style="width:28px;height:28px;border-radius:50%;background:${col};color:white;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">${n}</div>
+                  <div>
+                    <div style="font-size:11px;font-weight:700;color:${col}">${t}</div>
+                    <div style="font-size:13px;font-weight:800;color:var(--text)">${title}</div>
+                  </div>
+                </div>
+                <div style="font-size:12px;color:var(--sec);line-height:1.5">${desc}</div>
+              </div>`).join('')}
+          </div>
+
+          <!-- What the tool produces -->
+          <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:24px">
+            <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sec);margin-bottom:12px">Lo que produce esta sesión</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+              ${[
+                ['📋','Iniciativas con foco y alcance definido'],
+                ['👤','Responsable por foco + persona de cobertura'],
+                ['⚡','Plan de acciones con primer paso y criterio de cierre'],
+                ['📊','Métricas: indicador, baseline, target y plazo'],
+                ['🗓','Roadmap organizado por horizonte temporal'],
+                ['🔗','Necesidades de coordinación con la Mesa'],
+              ].map(([ic,txt])=>`<div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:8px"><span style="font-size:16px;flex-shrink:0">${ic}</span><span style="font-size:12px;color:var(--text);font-weight:600;line-height:1.4">${txt}</span></div>`).join('')}
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div style="display:flex;justify-content:center">
+            <button onclick="goV('setup')" style="background:var(--navy);color:white;font-family:var(--font);font-size:15px;font-weight:800;padding:14px 48px;border-radius:10px;border:none;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--dnavy)'" onmouseout="this.style.background='var(--navy)'">
+              Comenzar la sesión <span style="font-size:18px">→</span>
+            </button>
+          </div>
+          <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--sec)">possybl · Sistema Integrado de Crecimiento OSDE</div>
+
+        </div>
+      </div>
+    </div>
+
     <!-- SETUP -->
     <div id="view-setup" class="setup-wrap">
       <div class="pt">Mesa de Trabajo — Facilitador</div>
@@ -664,7 +732,8 @@ function loadLS(){
     SEG_MAP={ B2B:d.B2B||[], B2C:d.B2C||[], Bajas:d.Bajas||[] };
     const s=d.seg||null;
     if(s){ SEG=s; INITS=SEG_MAP[s]||[]; setSeg(s,true); }
-  }catch(e){}
+    else { goV('bienvenida'); }
+  }catch(e){ goV('bienvenida'); }
 }
 function saveLS(){ saveCurrentSeg(); localStorage.setItem(LSKEY,JSON.stringify({seg:SEG,B2B:SEG_MAP.B2B,B2C:SEG_MAP.B2C,Bajas:SEG_MAP.Bajas})); }
 
@@ -725,7 +794,7 @@ function loadPreset(){
 // ═══════════════════════════════════════════
 // VIEWS
 // ═══════════════════════════════════════════
-const VIDS=['setup','inventario','detalle','roadmap','exportar'];
+const VIDS=['bienvenida','setup','inventario','detalle','roadmap','exportar'];
 function goV(v){
   VIEW=v;
   VIDS.forEach(id=>{ const el=document.getElementById('view-'+id); if(el) el.style.display=(id===v)?'block':'none'; });
