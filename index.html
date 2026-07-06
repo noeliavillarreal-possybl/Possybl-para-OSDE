@@ -296,6 +296,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar" style="display:none">
     <div class="ss">Vistas</div>
+    <div class="si" id="nBien" onclick="goV('bienvenida')"><div class="ico" style="background:#f0f0ff">🏠</div>Carátula</div>
     <div class="si" id="nInv" onclick="goV('inventario')"><div class="ico" style="background:#eef2ff">📋</div>Inventario</div>
     <div class="si" id="nRoad" onclick="goV('roadmap')"><div class="ico" style="background:#f3eeff">📊</div>Roadmap</div>
     <div class="si" id="nExp" onclick="goV('exportar')"><div class="ico" style="background:#ecfdf5">📤</div>Exportar</div>
@@ -304,7 +305,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
     <div class="s-inits" id="sidebarList"></div>
     <div class="s-add">
       <button class="btn btn-p" style="width:100%;justify-content:center;margin-bottom:8px" onclick="addInit()">+ Nueva iniciativa</button>
-      <button class="btn btn-s btn-sm" style="width:100%;justify-content:center;font-size:11px;color:var(--sec)" onclick="reiniciar()">↺ Reiniciar sesión</button>
+      <button class="btn btn-s btn-sm" style="width:100%;justify-content:center;font-size:11px;color:var(--sec);margin-bottom:8px" onclick="reiniciar()">↺ Reiniciar sesión</button>
+      <div style="font-size:10.5px;color:var(--sec);line-height:1.4;padding:6px 2px">💾 Los datos se guardan automáticamente. Volvé a la misma URL para continuar donde dejaste.</div>
     </div>
   </div>
 
@@ -337,28 +339,28 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
             <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px">
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
                 <div style="width:28px;height:28px;border-radius:50%;background:var(--navy);color:white;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
-                <div><div style="font-size:11px;font-weight:700;color:var(--navy)">20 min</div><div style="font-size:13px;font-weight:800;color:var(--text)">Encuadre del segmento</div></div>
+                <div style="font-size:13px;font-weight:800;color:var(--text)">Encuadre del segmento</div>
               </div>
               <div style="font-size:12px;color:var(--sec);line-height:1.5">Validar el norte del segmento y el peso relativo de cada foco estratégico.</div>
             </div>
             <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px">
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
                 <div style="width:28px;height:28px;border-radius:50%;background:var(--bajas);color:white;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
-                <div><div style="font-size:11px;font-weight:700;color:var(--bajas)">40 min</div><div style="font-size:13px;font-weight:800;color:var(--text)">Inventario de iniciativas</div></div>
+                <div style="font-size:13px;font-weight:800;color:var(--text)">Inventario de iniciativas</div>
               </div>
               <div style="font-size:12px;color:var(--sec);line-height:1.5">Las iniciativas ya están pre-cargadas del plan estratégico. El equipo las revisa y puede sumar nuevas.</div>
             </div>
             <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px">
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
                 <div style="width:28px;height:28px;border-radius:50%;background:var(--upgrade);color:white;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
-                <div><div style="font-size:11px;font-weight:700;color:var(--upgrade)">80 min</div><div style="font-size:13px;font-weight:800;color:var(--text)">Profundización por iniciativa</div></div>
+                <div style="font-size:13px;font-weight:800;color:var(--text)">Profundización por iniciativa</div>
               </div>
               <div style="font-size:12px;color:var(--sec);line-height:1.5">Alcance, responsables, acciones concretas con primer paso y criterio de cierre, métricas y horizonte.</div>
             </div>
             <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px">
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
                 <div style="width:28px;height:28px;border-radius:50%;background:var(--exp);color:white;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
-                <div><div style="font-size:11px;font-weight:700;color:var(--exp)">40 min</div><div style="font-size:13px;font-weight:800;color:var(--text)">Roadmap y coordinación</div></div>
+                <div style="font-size:13px;font-weight:800;color:var(--text)">Roadmap y coordinación</div>
               </div>
               <div style="font-size:12px;color:var(--sec);line-height:1.5">Organizar las acciones por horizonte (30 / 60 / 90 días / 6m / +12m) y documentar lo que necesita la Mesa.</div>
             </div>
@@ -410,15 +412,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
         <div class="nl">Norte del segmento</div>
         <div class="nt" id="norteText"></div>
       </div>
-      <div style="background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;padding:8px 14px;font-size:11.5px;color:#065f46;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px">
-        💾 Los datos se guardan automáticamente en este navegador. Si volvés a abrir la herramienta desde la misma URL, encontrás todo como lo dejaste.
-      </div>
       <div class="pt" id="invTitle">Iniciativas</div>
       <div class="ps">Hacé click en una iniciativa para completar el detalle. Las iniciativas están pre-cargadas del plan estratégico.</div>
       <div id="guardrailsWrap"></div>
-      <div class="card" style="padding:13px 15px">
+      <div id="initGrid"></div>
+      <div class="card" style="padding:13px 15px;margin-top:4px">
+        <div style="font-size:10.5px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">Agregar iniciativa</div>
         <div style="display:flex;gap:8px;align-items:flex-end">
-          <div class="f" style="flex:2"><label>Nombre de nueva iniciativa</label><input type="text" id="qName" placeholder="Agregá una iniciativa adicional..." onkeydown="if(event.key==='Enter')qAdd()"></div>
+          <div class="f" style="flex:2"><label>Nombre</label><input type="text" id="qName" placeholder="Nombre de la nueva iniciativa..." onkeydown="if(event.key==='Enter')qAdd()"></div>
           <div class="f" style="flex:1"><label>Foco</label>
             <select id="qFoco">
               <option value="">— Foco —</option>
@@ -431,7 +432,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
           <button class="btn btn-p" onclick="qAdd()">+ Agregar</button>
         </div>
       </div>
-      <div id="initGrid"></div>
     </div>
 
     <!-- DETALLE -->
@@ -844,7 +844,8 @@ const VIDS=['bienvenida','setup','inventario','detalle','roadmap','exportar'];
 function goV(v){
   VIEW=v;
   VIDS.forEach(id=>{ const el=document.getElementById('view-'+id); if(el) el.style.display=(id===v)?'block':'none'; });
-  ['nInv','nRoad','nExp'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
+  ['nBien','nInv','nRoad','nExp'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
+  if(v==='bienvenida') document.getElementById('nBien').classList.add('active');
   if(v==='inventario') document.getElementById('nInv').classList.add('active');
   if(v==='roadmap')    document.getElementById('nRoad').classList.add('active');
   if(v==='exportar')   document.getElementById('nExp').classList.add('active');
@@ -1342,37 +1343,57 @@ function renderExportar(){
 
 function doPrint(){
   const seg=SEG||'';
-  document.getElementById('pTitle').textContent=`Mesa de Trabajo — Segmento ${seg}`;
-  document.getElementById('pMeta').textContent=`${new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})} · ${INITS.length} iniciativas`;
-  document.getElementById('pNorte').innerHTML=SEG_DATA[SEG]?`<div class="ps" style="padding:10px;background:#eef2fb;border-radius:8px;margin-bottom:12px;font-size:11px"><strong>Norte del segmento:</strong> ${esc(SEG_DATA[SEG].norte)}</div>`:'';
+  const date=new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'});
+  const norte=SEG_DATA[SEG]?`<div class="norte">Norte del segmento: ${esc(SEG_DATA[SEG].norte)}</div>`:'';
 
-  // Iniciativas table
   const th='<tr><th>#</th><th>Iniciativa</th><th>Foco(s)</th><th>Responsables</th><th>Cobertura</th><th>Descripción</th><th>Criterio 90d</th><th>Coordinación</th></tr>';
   const rows=INITS.map((ini,i)=>{
     const resps=Object.entries(ini.responsablesPorFoco||{}).map(([f,p])=>`${f}: ${p}`).join(', ');
     return `<tr><td>${i+1}</td><td><strong>${esc(ini.nombre)}</strong></td><td>${(ini.focos||[]).join(', ')}</td><td>${esc(resps)||'—'}</td><td>${esc(ini.cobertura)||'—'}</td><td>${esc(ini.descripcion)}</td><td>${esc(ini.criterioExito)||'—'}</td><td>${ini.necesitaCoordinacion?esc(ini.descripcionCoordinacion)||'Sí':'—'}</td></tr>`;
   }).join('');
-  document.getElementById('pTable').innerHTML=`<div class="ps"><h3 style="font-size:13px;font-weight:800;color:#1226A8;margin-bottom:8px">Iniciativas</h3><table><thead>${th}</thead><tbody>${rows}</tbody></table></div>`;
 
-  // Acciones table
   const ath='<tr><th>#</th><th>Iniciativa</th><th>Acción</th><th>Responsable</th><th>Horizonte</th><th>Status</th><th>Primer paso (7 días)</th><th>Criterio de cierre</th></tr>';
   const arows=INITS.flatMap((ini,i)=>(ini.acciones||[]).map(a=>`<tr><td>${i+1}</td><td>${esc(ini.nombre)}</td><td>${esc(a.nombre)}</td><td>${esc(a.responsable)||'—'}</td><td>${HMAP[a.horizonte]||'—'}</td><td>${STLABEL[a.status]||'—'}</td><td>${esc(a.primerPaso)||'—'}</td><td>${esc(a.criterioCierre)||'—'}</td></tr>`)).join('');
-  document.getElementById('pAcciones').innerHTML=arows?`<div class="ps"><h3 style="font-size:13px;font-weight:800;color:#1226A8;margin-bottom:8px">Plan de acciones</h3><table><thead>${ath}</thead><tbody>${arows}</tbody></table></div>`:'';
 
-  // Roadmap summary
-  const rh='<tr><th>Horizonte</th><th>Iniciativa</th><th>Acciones en este horizonte</th><th>Responsable(s)</th></tr>';
+  const rh='<tr><th>Horizonte</th><th>Iniciativa</th><th>Acciones</th><th>Responsable(s)</th></tr>';
   const rrows=HORIZONS.flatMap(h=>INITS.filter(ini=>(ini.acciones||[]).some(a=>a.horizonte===h)).map(ini=>{
     const acts=(ini.acciones||[]).filter(a=>a.horizonte===h);
     return `<tr><td>${HMAP[h]}</td><td>${esc(ini.nombre)}</td><td>${acts.map(a=>esc(a.nombre)).join('; ')}</td><td>${[...new Set(acts.map(a=>a.responsable).filter(Boolean))].join(', ')||'—'}</td></tr>`;
   })).join('');
-  document.getElementById('pRoadmap').innerHTML=rrows?`<div class="ps"><h3 style="font-size:13px;font-weight:800;color:#1226A8;margin-bottom:8px">Roadmap por horizonte</h3><table><thead>${rh}</thead><tbody>${rrows}</tbody></table></div>`:'';
 
-  // Coord
   const ci=INITS.filter(i=>i.necesitaCoordinacion);
-  document.getElementById('pCoord').innerHTML=ci.length?`<div class="ps"><h3 style="font-size:13px;font-weight:800;color:#1226A8;margin-bottom:8px">Necesidades de coordinación</h3><table><thead><tr><th>Iniciativa</th><th>Foco(s)</th><th>¿Qué necesita?</th></tr></thead><tbody>${ci.map(i=>`<tr><td>${esc(i.nombre)}</td><td>${(i.focos||[]).join(', ')}</td><td>${esc(i.descripcionCoordinacion)||'—'}</td></tr>`).join('')}</tbody></table></div>`:'';
+  const coordRows=ci.map(i=>`<tr><td>${esc(i.nombre)}</td><td>${(i.focos||[]).join(', ')}</td><td>${esc(i.descripcionCoordinacion)||'—'}</td></tr>`).join('');
 
-  // Give the browser a tick to render before printing
-  setTimeout(()=>window.print(), 150);
+  const html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+<title>Mesa de Trabajo — Segmento ${esc(seg)}</title>
+<style>
+  body{font-family:Arial,sans-serif;font-size:10px;color:#1a2040;padding:20px;margin:0}
+  .header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #1226A8;padding-bottom:8px;margin-bottom:14px}
+  .header h1{font-size:16px;font-weight:800;color:#1226A8;margin:0}
+  .header .meta{font-size:10px;color:#888;text-align:right}
+  .norte{background:#EEF2FB;padding:8px 12px;border-radius:6px;margin-bottom:14px;font-size:10px}
+  h3{font-size:12px;font-weight:800;color:#1226A8;margin:18px 0 6px}
+  table{width:100%;border-collapse:collapse;margin-bottom:4px;font-size:9px;page-break-inside:auto}
+  th{background:#1226A8;color:white;padding:5px 6px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  td{padding:4px 6px;border-bottom:1px solid #e5e7eb;vertical-align:top}
+  tr:nth-child(even) td{background:#f8f9ff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .section{page-break-inside:avoid;margin-bottom:16px}
+</style></head><body>
+<div class="header">
+  <div><h1>Mesa de Trabajo — Segmento ${esc(seg)}</h1><div style="font-size:10px;color:#888;margin-top:3px">${date} · ${INITS.length} iniciativas</div></div>
+  <div class="meta"><strong style="color:#1226A8">oSde</strong><br>possybl</div>
+</div>
+${norte}
+<div class="section"><h3>Iniciativas</h3><table><thead>${th}</thead><tbody>${rows||'<tr><td colspan="8">Sin iniciativas</td></tr>'}</tbody></table></div>
+${arows?`<div class="section"><h3>Plan de acciones</h3><table><thead>${ath}</thead><tbody>${arows}</tbody></table></div>`:''}
+${rrows?`<div class="section"><h3>Roadmap por horizonte</h3><table><thead>${rh}</thead><tbody>${rrows}</tbody></table></div>`:''}
+${coordRows?`<div class="section"><h3>Necesidades de coordinación</h3><table><thead><tr><th>Iniciativa</th><th>Foco(s)</th><th>¿Qué necesita?</th></tr></thead><tbody>${coordRows}</tbody></table></div>`:''}
+<script>window.addEventListener('load',function(){window.print();});<\/script>
+</body></html>`;
+
+  const w=window.open('','_blank','width=900,height=700');
+  if(!w){ alert('Permitir ventanas emergentes para imprimir.'); return; }
+  w.document.open(); w.document.write(html); w.document.close();
 }
 
 function reiniciar(){
