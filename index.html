@@ -314,62 +314,72 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
     <!-- BIENVENIDA -->
     <div id="view-bienvenida" style="display:none">
       <div style="min-height:calc(100vh - 52px);display:flex;align-items:center;justify-content:center;padding:32px 24px;background:var(--bg)">
-        <div style="max-width:800px;width:100%">
+        <div style="max-width:820px;width:100%">
 
-          <!-- Header brand -->
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px">
+          <!-- Brand header -->
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px">
             <div style="background:var(--navy);border-radius:10px;padding:8px 16px;font-size:20px;font-weight:800;color:white">o<span style="color:var(--cyan)">S</span>de</div>
             <div style="height:28px;width:1px;background:var(--border)"></div>
             <div style="font-size:12px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:1px">Sistema Integrado de Crecimiento</div>
           </div>
 
-          <!-- Title block -->
-          <div style="background:linear-gradient(135deg,var(--dnavy) 0%,var(--navy) 60%,#1a35c4 100%);border-radius:16px;padding:36px 40px;margin-bottom:20px;position:relative;overflow:hidden">
-            <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:rgba(38,194,255,.08)"></div>
+          <!-- Hero block -->
+          <div style="background:linear-gradient(135deg,var(--dnavy) 0%,var(--navy) 60%,#1a35c4 100%);border-radius:16px;padding:36px 40px;margin-bottom:18px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:-30px;right:-30px;width:180px;height:180px;border-radius:50%;background:rgba(38,194,255,.07)"></div>
             <div style="position:absolute;bottom:-40px;right:60px;width:120px;height:120px;border-radius:50%;background:rgba(38,194,255,.05)"></div>
             <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--cyan);margin-bottom:10px">Herramienta de facilitación</div>
             <div style="font-size:26px;font-weight:800;color:white;line-height:1.25;margin-bottom:12px">Mesa de Trabajo<br>por Segmento</div>
-            <div style="font-size:13.5px;color:rgba(255,255,255,.8);line-height:1.6;max-width:520px">Esta herramienta acompaña las sesiones de trabajo donde cada frente de ejecución baja el plan estratégico a un plan concreto: con iniciativas, acciones, responsables, métricas y roadmap.</div>
+            <div style="font-size:13.5px;color:rgba(255,255,255,.82);line-height:1.65;max-width:540px">Esta herramienta acompaña las sesiones donde cada frente de ejecución baja el plan estratégico a un plan concreto: con iniciativas, acciones, responsables, métricas y roadmap.</div>
           </div>
 
-          <!-- 4 steps -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
-            ${[
-              ['1','20 min','Encuadre del segmento','Validar el norte del segmento y el peso relativo de cada foco estratégico.','var(--navy)'],
-              ['2','40 min','Inventario de iniciativas','Las iniciativas ya están pre-cargadas del plan estratégico. El equipo las revisa y puede sumar nuevas.','var(--bajas)'],
-              ['3','80 min','Profundización por iniciativa','Para cada iniciativa: alcance, responsables, acciones concretas con primer paso y criterio de cierre, métricas y horizonte.','var(--upgrade)'],
-              ['4','40 min','Roadmap y coordinación','Organizar las acciones por horizonte (30 / 60 / 90 días / 6m / +12m) y documentar lo que necesita la Mesa.','var(--exp)'],
-            ].map(([n,t,title,desc,col])=>`
-              <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px">
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-                  <div style="width:28px;height:28px;border-radius:50%;background:${col};color:white;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">${n}</div>
-                  <div>
-                    <div style="font-size:11px;font-weight:700;color:${col}">${t}</div>
-                    <div style="font-size:13px;font-weight:800;color:var(--text)">${title}</div>
-                  </div>
-                </div>
-                <div style="font-size:12px;color:var(--sec);line-height:1.5">${desc}</div>
-              </div>`).join('')}
+          <!-- 4 bloques -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+            <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="width:28px;height:28px;border-radius:50%;background:var(--navy);color:white;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
+                <div><div style="font-size:11px;font-weight:700;color:var(--navy)">20 min</div><div style="font-size:13px;font-weight:800;color:var(--text)">Encuadre del segmento</div></div>
+              </div>
+              <div style="font-size:12px;color:var(--sec);line-height:1.5">Validar el norte del segmento y el peso relativo de cada foco estratégico.</div>
+            </div>
+            <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="width:28px;height:28px;border-radius:50%;background:var(--bajas);color:white;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
+                <div><div style="font-size:11px;font-weight:700;color:var(--bajas)">40 min</div><div style="font-size:13px;font-weight:800;color:var(--text)">Inventario de iniciativas</div></div>
+              </div>
+              <div style="font-size:12px;color:var(--sec);line-height:1.5">Las iniciativas ya están pre-cargadas del plan estratégico. El equipo las revisa y puede sumar nuevas.</div>
+            </div>
+            <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="width:28px;height:28px;border-radius:50%;background:var(--upgrade);color:white;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
+                <div><div style="font-size:11px;font-weight:700;color:var(--upgrade)">80 min</div><div style="font-size:13px;font-weight:800;color:var(--text)">Profundización por iniciativa</div></div>
+              </div>
+              <div style="font-size:12px;color:var(--sec);line-height:1.5">Alcance, responsables, acciones concretas con primer paso y criterio de cierre, métricas y horizonte.</div>
+            </div>
+            <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+                <div style="width:28px;height:28px;border-radius:50%;background:var(--exp);color:white;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">4</div>
+                <div><div style="font-size:11px;font-weight:700;color:var(--exp)">40 min</div><div style="font-size:13px;font-weight:800;color:var(--text)">Roadmap y coordinación</div></div>
+              </div>
+              <div style="font-size:12px;color:var(--sec);line-height:1.5">Organizar las acciones por horizonte (30 / 60 / 90 días / 6m / +12m) y documentar lo que necesita la Mesa.</div>
+            </div>
           </div>
 
-          <!-- What the tool produces -->
-          <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:24px">
+          <!-- Lo que produce -->
+          <div style="background:white;border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:22px">
             <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sec);margin-bottom:12px">Lo que produce esta sesión</div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
-              ${[
-                ['📋','Iniciativas con foco y alcance definido'],
-                ['👤','Responsable por foco + persona de cobertura'],
-                ['⚡','Plan de acciones con primer paso y criterio de cierre'],
-                ['📊','Métricas: indicador, baseline, target y plazo'],
-                ['🗓','Roadmap organizado por horizonte temporal'],
-                ['🔗','Necesidades de coordinación con la Mesa'],
-              ].map(([ic,txt])=>`<div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:8px"><span style="font-size:16px;flex-shrink:0">${ic}</span><span style="font-size:12px;color:var(--text);font-weight:600;line-height:1.4">${txt}</span></div>`).join('')}
+              <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:8px"><span style="font-size:16px;flex-shrink:0">📋</span><span style="font-size:12px;color:var(--text);font-weight:600;line-height:1.4">Iniciativas con foco y alcance definido</span></div>
+              <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:8px"><span style="font-size:16px;flex-shrink:0">👤</span><span style="font-size:12px;color:var(--text);font-weight:600;line-height:1.4">Responsable por foco + persona de cobertura</span></div>
+              <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:8px"><span style="font-size:16px;flex-shrink:0">⚡</span><span style="font-size:12px;color:var(--text);font-weight:600;line-height:1.4">Plan de acciones con primer paso y criterio de cierre</span></div>
+              <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:8px"><span style="font-size:16px;flex-shrink:0">📊</span><span style="font-size:12px;color:var(--text);font-weight:600;line-height:1.4">Métricas: indicador, baseline, target y plazo</span></div>
+              <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:8px"><span style="font-size:16px;flex-shrink:0">🗓</span><span style="font-size:12px;color:var(--text);font-weight:600;line-height:1.4">Roadmap organizado por horizonte temporal</span></div>
+              <div style="display:flex;gap:8px;align-items:flex-start;padding:8px;background:var(--bg);border-radius:8px"><span style="font-size:16px;flex-shrink:0">🔗</span><span style="font-size:12px;color:var(--text);font-weight:600;line-height:1.4">Necesidades de coordinación con la Mesa</span></div>
             </div>
           </div>
 
           <!-- CTA -->
           <div style="display:flex;justify-content:center">
-            <button onclick="goV('setup')" style="background:var(--navy);color:white;font-family:var(--font);font-size:15px;font-weight:800;padding:14px 48px;border-radius:10px;border:none;cursor:pointer;transition:background .15s;display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--dnavy)'" onmouseout="this.style.background='var(--navy)'">
+            <button onclick="goV('setup')" style="background:var(--navy);color:white;font-family:var(--font);font-size:15px;font-weight:800;padding:14px 52px;border-radius:10px;border:none;cursor:pointer;display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--dnavy)'" onmouseout="this.style.background='var(--navy)'">
               Comenzar la sesión <span style="font-size:18px">→</span>
             </button>
           </div>
