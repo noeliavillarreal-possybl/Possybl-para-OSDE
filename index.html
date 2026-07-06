@@ -378,10 +378,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
           </div>
 
           <!-- CTA -->
-          <div style="display:flex;justify-content:center">
-            <button onclick="goV('setup')" style="background:var(--navy);color:white;font-family:var(--font);font-size:15px;font-weight:800;padding:14px 52px;border-radius:10px;border:none;cursor:pointer;display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--dnavy)'" onmouseout="this.style.background='var(--navy)'">
-              Comenzar la sesión <span style="font-size:18px">→</span>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+            <button id="btnComenzar" onclick="startSession()" style="background:var(--navy);color:white;font-family:var(--font);font-size:15px;font-weight:800;padding:14px 52px;border-radius:10px;border:none;cursor:pointer;display:flex;align-items:center;gap:10px" onmouseover="this.style.background='var(--dnavy)'" onmouseout="this.style.background='var(--navy)'">
+              Comenzar la sesión →
             </button>
+            <div id="continuacionInfo" style="display:none;font-size:12px;color:var(--sec);text-align:center;padding:8px 16px;background:white;border-radius:8px;border:1px solid var(--border)"></div>
           </div>
           <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--sec)">possybl · Sistema Integrado de Crecimiento OSDE</div>
 
@@ -741,9 +742,44 @@ function loadLS(){
     const d=JSON.parse(localStorage.getItem(LSKEY)||'{}');
     SEG_MAP={ B2B:d.B2B||[], B2C:d.B2C||[], Bajas:d.Bajas||[] };
     const s=d.seg||null;
-    if(s){ SEG=s; INITS=SEG_MAP[s]||[]; setSeg(s,true); }
-    else { goV('bienvenida'); }
+    if(s){ SEG=s; INITS=SEG_MAP[s]||[]; }
+    // Always show bienvenida on load, then update the CTA based on state
+    goV('bienvenida');
+    renderBienvenidaCTA();
   }catch(e){ goV('bienvenida'); }
+}
+
+function renderBienvenidaCTA(){
+  const btn=document.getElementById('btnComenzar');
+  const cont=document.getElementById('continuacionInfo');
+  if(!btn) return;
+  if(SEG && (SEG_MAP.B2B.length||SEG_MAP.B2C.length||SEG_MAP.Bajas.length)){
+    const total=SEG_MAP.B2B.length+SEG_MAP.B2C.length+SEG_MAP.Bajas.length;
+    btn.textContent='Continuar sesión →';
+    if(cont){
+      cont.style.display='block';
+      cont.innerHTML=`💾 Tenés una sesión guardada: <strong>${total} iniciativa(s)</strong> en total. Podés continuar donde dejaste o <a href="#" onclick="resetAll();return false;" style="color:var(--navy);font-weight:700">empezar de cero</a>.`;
+    }
+  } else {
+    btn.textContent='Comenzar la sesión →';
+    if(cont) cont.style.display='none';
+  }
+}
+
+function startSession(){
+  if(SEG){ setSeg(SEG,false); }
+  else { goV('setup'); }
+}
+
+function resetAll(){
+  showModal('Empezar de cero','¿Borrás todos los datos guardados y empezás desde el inicio?',[
+    {label:'Cancelar'},
+    {label:'Sí, empezar de cero',cls:'btn-d',cb:()=>{
+      localStorage.removeItem(LSKEY);
+      SEG=null; SEG_MAP={B2B:[],B2C:[],Bajas:[]}; INITS=[]; CUR=-1;
+      goV('setup');
+    }}
+  ]);
 }
 function saveLS(){ saveCurrentSeg(); localStorage.setItem(LSKEY,JSON.stringify({seg:SEG,B2B:SEG_MAP.B2B,B2C:SEG_MAP.B2C,Bajas:SEG_MAP.Bajas})); }
 
@@ -1342,15 +1378,8 @@ function doPrint(){
 function reiniciar(){
   showModal('Reiniciar sesión','¿Qué querés reiniciar?',[
     {label:'Cancelar'},
-    {label:`Solo ${SEG}`,cls:'btn-s',cb:()=>{
-      INITS=[]; SEG_MAP[SEG]=[]; saveLS();
-      loadPreset();
-    }},
-    {label:'Los 3 segmentos',cls:'btn-d',cb:()=>{
-      SEG_MAP={B2B:[],B2C:[],Bajas:[]};
-      INITS=[]; saveLS();
-      loadPreset();
-    }},
+    {label:`Solo ${SEG}`,cls:'btn-s',cb:()=>{ INITS=[]; SEG_MAP[SEG]=[]; saveLS(); loadPreset(); }},
+    {label:'Los 3 segmentos',cls:'btn-d',cb:()=>{ SEG_MAP={B2B:[],B2C:[],Bajas:[]}; INITS=[]; saveLS(); loadPreset(); }},
   ]);
 }
 
