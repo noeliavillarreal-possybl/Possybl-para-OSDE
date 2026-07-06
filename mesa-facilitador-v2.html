@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mesa de Trabajo — Facilitador OSDE</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1226A8;--dnavy:#0E1F8A;--cyan:#26C2FF;--bg:#EEF2FB;--border:#C8D4F4;
+  --white:#FFFFFF;--text:#1a2040;--sec:#6B7280;
+  --altas:#E05C00;--bajas:#1533D4;--upgrade:#6B3FA0;--exp:#007A8C;
+  --green:#059669;--red:#DC2626;--amber:#D97706;--font:'Nunito',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+
+/* TOP BAR */
+.topbar{background:var(--navy);color:var(--white);padding:0 20px;height:52px;display:flex;align-items:center;gap:14px;flex-shrink:0;z-index:100}
+.topbar-logo{font-size:18px;font-weight:800;letter-spacing:-.5px}
+.topbar-logo span{color:var(--cyan)}
+.tsep{width:1px;height:24px;background:rgba(255,255,255,.2)}
+.seg-btn{padding:5px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,.3);background:transparent;color:rgba(255,255,255,.7);font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s}
+.seg-btn:hover{background:rgba(255,255,255,.12);color:#fff}
+.seg-btn.active{background:var(--cyan);border-color:var(--cyan);color:var(--navy)}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.sbadge{background:rgba(255,255,255,.1);border-radius:12px;padding:4px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.8)}
+.sbadge .n{color:var(--cyan);font-size:14px;font-weight:800}
+
+/* LAYOUT */
+.main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:224px;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.content{flex:1;overflow-y:auto;padding:22px 26px}
+
+/* SIDEBAR */
+.ss{padding:14px 16px 6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--sec)}
+.si{padding:9px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text);border-left:3px solid transparent;transition:all .12s}
+.si:hover{background:var(--bg);color:var(--navy)}
+.si.active{background:var(--bg);color:var(--navy);border-left-color:var(--cyan)}
+.si .ico{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.s-inits{flex:1;overflow-y:auto}
+.s-init{padding:8px 14px;cursor:pointer;border-left:3px solid transparent;transition:all .12s}
+.s-init:hover{background:var(--bg)}
+.s-init.active{background:var(--bg);border-left-color:var(--navy)}
+.s-init.done{border-left-color:var(--green)}
+.s-init-name{font-size:11.5px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.s-init-meta{font-size:10px;color:var(--sec);margin-top:2px;display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.fdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.s-add{padding:10px 14px;border-top:1px solid var(--border)}
+
+/* CARDS */
+.pt{font-size:21px;font-weight:800;color:var(--navy);margin-bottom:3px}
+.ps{font-size:13px;color:var(--sec);margin-bottom:20px}
+.card{background:var(--white);border-radius:12px;border:1px solid var(--border);padding:18px 20px;margin-bottom:14px}
+.ctitle{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cdot{width:8px;height:8px;border-radius:50%;background:var(--cyan);flex-shrink:0}
+.fr{display:flex;gap:14px;margin-bottom:12px}
+.fc{flex-direction:column}
+.f{flex:1;display:flex;flex-direction:column;gap:4px}
+.f label{font-size:10.5px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px}
+.f .hint{font-size:10px;color:var(--sec);font-style:italic;margin-top:2px}
+.f input,.f textarea,.f select{font-family:var(--font);font-size:13px;color:var(--text);border:1.5px solid var(--border);border-radius:8px;padding:8px 11px;outline:none;transition:border .15s;background:var(--white);width:100%}
+.f input:focus,.f textarea:focus,.f select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(38,194,255,.1)}
+.f textarea{resize:vertical;min-height:62px}
+
+/* FOCO multi-select */
+.foco-grid{display:flex;gap:7px;flex-wrap:wrap}
+.fb{padding:6px 13px;border-radius:20px;border:2px solid var(--border);background:var(--white);font-family:var(--font);font-size:11.5px;font-weight:700;cursor:pointer;transition:all .15s;color:var(--sec)}
+.fb.Altas:hover,.fb.Altas.on{background:#fff3ed;border-color:var(--altas);color:var(--altas)}
+.fb.Bajas:hover,.fb.Bajas.on{background:#eef1ff;border-color:var(--bajas);color:var(--bajas)}
+.fb.Upgrade:hover,.fb.Upgrade.on{background:#f3eeff;border-color:var(--upgrade);color:var(--upgrade)}
+.fb.Experiencia:hover,.fb.Experiencia.on{background:#e6f5f6;border-color:var(--exp);color:var(--exp)}
+
+/* STATUS */
+.sb2{padding:6px 13px;border-radius:20px;border:2px solid var(--border);background:var(--white);font-family:var(--font);font-size:11.5px;font-weight:700;cursor:pointer;transition:all .15s;color:var(--sec)}
+.sb2.idea.on{background:#fffbe6;border-color:var(--amber);color:var(--amber)}
+.sb2.en_curso.on{background:#ecfdf5;border-color:var(--green);color:var(--green)}
+.sb2.pausada.on{background:#fff7ed;border-color:var(--altas);color:var(--altas)}
+.sb2.bloqueada.on{background:#fef2f2;border-color:var(--red);color:var(--red)}
+
+/* TAGS */
+.tag-list{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;min-height:20px}
+.tag{padding:3px 9px;border-radius:11px;background:var(--bg);border:1px solid var(--border);font-size:11.5px;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:4px}
+.tag .rm{cursor:pointer;color:var(--sec);font-size:13px;line-height:1}
+.tag .rm:hover{color:var(--red)}
+.tri{display:flex;gap:7px}
+
+/* TOGGLE */
+.tog{position:relative;width:38px;height:20px;cursor:pointer;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tsl{position:absolute;inset:0;background:var(--border);border-radius:10px;transition:.2s}
+.tsl:before{content:'';position:absolute;height:14px;width:14px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.2s}
+.tog input:checked+.tsl{background:var(--cyan)}
+.tog input:checked+.tsl:before{transform:translateX(18px)}
+
+/* HORIZONTE */
+.hg{display:flex;gap:7px;flex-wrap:wrap}
+.hb{padding:6px 14px;border-radius:20px;border:2px solid var(--border);background:var(--white);font-family:var(--font);font-size:11.5px;font-weight:700;cursor:pointer;transition:all .15s;color:var(--sec)}
+.hb.on{background:var(--navy);border-color:var(--navy);color:white}
+
+/* BUTTONS */
+.btn{padding:9px 18px;border-radius:8px;font-family:var(--font);font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s;border:none;display:inline-flex;align-items:center;gap:6px}
+.btn-p{background:var(--navy);color:var(--white)}
+.btn-p:hover{background:var(--dnavy)}
+.btn-s{background:var(--bg);color:var(--navy);border:1.5px solid var(--border)}
+.btn-s:hover{background:var(--border)}
+.btn-d{background:#fef2f2;color:var(--red);border:1.5px solid #fecaca}
+.btn-d:hover{background:#fee2e2}
+.btn-sm{padding:6px 12px;font-size:11.5px}
+.btn-xs{padding:4px 9px;font-size:11px}
+
+/* FOCO TAGS */
+.ft{padding:2px 9px;border-radius:10px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.ft.Altas{background:#fff3ed;color:var(--altas)}
+.ft.Bajas{background:#eef1ff;color:var(--bajas)}
+.ft.Upgrade{background:#f3eeff;color:var(--upgrade)}
+.ft.Experiencia{background:#e6f5f6;color:var(--exp)}
+.st{padding:2px 9px;border-radius:10px;font-size:10.5px;font-weight:700}
+.st.idea{background:#fffbe6;color:var(--amber)}
+.st.en_curso{background:#ecfdf5;color:var(--green)}
+.st.pausada{background:#fff7ed;color:var(--altas)}
+.st.bloqueada{background:#fef2f2;color:var(--red)}
+.st.pendiente{background:#f5f5f5;color:var(--sec)}
+.st.completada{background:#ecfdf5;color:var(--green)}
+
+/* INVENTARIO CARDS */
+.ic{background:var(--white);border-radius:10px;border:1.5px solid var(--border);padding:13px 15px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;margin-bottom:10px}
+.ic:hover{border-color:var(--cyan);box-shadow:0 2px 12px rgba(18,38,168,.07)}
+.ic.done{border-color:#a7f3d0}
+.ic-num{width:30px;height:30px;border-radius:50%;background:var(--bg);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:var(--navy);flex-shrink:0}
+.ic-body{flex:1;min-width:0}
+.ic-name{font-size:13.5px;font-weight:700;color:var(--text)}
+.ic-meta{display:flex;gap:6px;margin-top:5px;flex-wrap:wrap;align-items:center}
+.cdot2{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.cdot2.done{background:var(--green)}
+.cdot2.part{background:var(--amber)}
+.cdot2.none{background:var(--border)}
+
+/* ACCIONES TABLE */
+.accion-row{display:flex;gap:8px;padding:10px 0;border-bottom:1px solid var(--bg)}
+.accion-row:last-child{border-bottom:none}
+.accion-num{width:22px;height:22px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--sec);flex-shrink:0;margin-top:8px}
+.accion-main{flex:1;display:flex;flex-direction:column;gap:6px}
+.accion-top{display:grid;grid-template-columns:1fr 155px 105px 105px auto;gap:8px;align-items:center}
+.accion-sub{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.accion-top input,.accion-top select{font-family:var(--font);font-size:12px;color:var(--text);border:1.5px solid var(--border);border-radius:7px;padding:7px 9px;outline:none;transition:border .15s;background:var(--white);width:100%}
+.accion-top input:focus,.accion-top select:focus{border-color:var(--cyan)}
+.accion-sub input{font-family:var(--font);font-size:11.5px;color:var(--text);border:1.5px solid var(--bg);border-radius:7px;padding:6px 9px;outline:none;transition:border .15s;background:#fafbff;width:100%}
+.accion-sub input:focus{border-color:var(--cyan);background:var(--white)}
+.accion-sub input::placeholder{color:#aab}
+.new-accion{display:flex;gap:8px;padding:10px 0 0;align-items:center}
+.new-accion input{font-family:var(--font);font-size:12px;color:var(--text);border:1.5px dashed var(--border);border-radius:7px;padding:7px 11px;outline:none;transition:border .15s;background:var(--bg);flex:1}
+.new-accion input:focus{border-color:var(--cyan);background:var(--white)}
+
+/* KPI TABLE */
+.kpi-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--bg)}
+.kpi-row:last-child{border-bottom:none}
+.kpi-row input{font-family:var(--font);font-size:12px;border:1.5px solid var(--border);border-radius:7px;padding:6px 9px;outline:none;background:var(--white);width:100%}
+.kpi-row input:focus{border-color:var(--cyan)}
+.kpi-header{display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;padding-bottom:6px;border-bottom:1.5px solid var(--border);margin-bottom:4px}
+.kpi-header span{font-size:10px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.5px}
+.kpi-row.base .kpi-name-f{background:var(--bg);cursor:not-allowed;color:var(--navy);font-weight:700}
+
+/* RESP POR FOCO */
+.resp-foco-grid{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+.resp-foco-item{display:flex;flex-direction:column;gap:4px}
+.resp-foco-item label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.resp-foco-item select{font-family:var(--font);font-size:12.5px;border:1.5px solid var(--border);border-radius:8px;padding:7px 10px;outline:none;background:var(--white)}
+.resp-foco-item select:focus{border-color:var(--cyan)}
+
+/* CONNECTIONS VIEW */
+.conn-matrix{overflow-x:auto}
+.conn-table{width:100%;border-collapse:collapse;font-size:12px}
+.conn-table th{background:var(--navy);color:white;padding:8px 10px;text-align:left;font-size:10.5px;white-space:nowrap}
+.conn-table td{padding:7px 10px;border-bottom:1px solid var(--bg);vertical-align:middle}
+.conn-table tr:hover td{background:var(--bg)}
+.conn-dot{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:white;cursor:pointer}
+.conn-card{background:var(--white);border-radius:10px;border:1px solid var(--border);padding:14px 16px;margin-bottom:10px}
+.conn-alert{padding:10px 14px;border-radius:8px;font-size:12.5px;font-weight:600;display:flex;gap:8px;align-items:flex-start}
+.conn-alert.warn{background:#fffbe6;border:1px solid #fde68a;color:#92400e}
+.conn-alert.info{background:#eef2ff;border:1px solid var(--border);color:var(--navy)}
+
+/* GANTT */
+.gantt-wrap{overflow-x:auto}
+.gantt{border-collapse:collapse;width:100%;min-width:700px}
+.gantt th{background:var(--navy);color:white;padding:8px 12px;font-size:11px;text-align:center;white-space:nowrap;position:sticky;top:0}
+.gantt th:first-child{text-align:left;min-width:220px}
+.gantt td{padding:6px 8px;border:1px solid var(--bg);vertical-align:top;min-width:140px}
+.gantt td:first-child{background:var(--bg);font-size:12px;font-weight:700;color:var(--navy);min-width:220px;max-width:220px}
+.gantt tr:hover td{background:#f0f4ff}
+.gantt tr:hover td:first-child{background:var(--border)}
+.g-chip{padding:4px 9px;border-radius:8px;font-size:10.5px;font-weight:600;margin:2px 0;display:block;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.g-chip.en_curso:before{content:'▶ '}
+.g-chip.completada:before{content:'✓ '}
+.g-chip.bloqueada{opacity:.6;text-decoration:line-through}
+.norte-banner{background:linear-gradient(135deg,var(--dnavy),var(--navy));border-radius:10px;padding:14px 18px;margin-bottom:16px;color:white}
+.norte-banner .nl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--cyan);margin-bottom:5px}
+.norte-banner .nt{font-size:13.5px;font-weight:600;line-height:1.5}
+
+/* SETUP */
+.setup-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:40px}
+.setup-cards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.setup-card{padding:28px 32px;border-radius:16px;border:2.5px solid var(--border);background:var(--white);font-family:var(--font);font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;color:var(--text);min-width:155px;text-align:center}
+.setup-card:hover{border-color:var(--cyan);background:var(--bg);color:var(--navy)}
+.setup-card .sc-icon{font-size:28px;margin-bottom:8px}
+
+/* AMBI BANNER */
+.ambi{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--navy);line-height:1.5}
+.ambi strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--sec);margin-bottom:4px}
+
+/* GUARDRAIL */
+.guardrail{background:#fffbe6;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:12px;color:#78350f;margin-bottom:10px;display:flex;gap:8px}
+
+/* PROF Q */
+.pq{background:#fffde7;border:1px solid #fde68a;border-radius:7px;padding:9px 12px;font-size:11.5px;color:#78350f;margin-top:8px}
+.pq strong{display:block;font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:#92400e;margin-bottom:3px}
+
+/* ROADMAP COLUMNS */
+.rm-cols{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.rm-col{background:var(--white);border-radius:10px;border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column}
+.rm-col-hdr{padding:10px 12px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;display:flex;justify-content:space-between;align-items:center}
+.rm-col-hdr.h30{background:#dce8ff;color:var(--navy)}
+.rm-col-hdr.h60{background:#e8ecff;color:var(--bajas)}
+.rm-col-hdr.h90{background:#ede8ff;color:var(--upgrade)}
+.rm-col-hdr.h6m{background:#e2f4f6;color:var(--exp)}
+.rm-col-hdr.h12m{background:#f0f0f0;color:var(--sec)}
+.rm-col-body{padding:10px;flex:1}
+
+/* EXPORT */
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.exp-card{background:var(--white);border-radius:12px;border:1px solid var(--border);padding:22px;text-align:center}
+.exp-card .ei{font-size:34px;margin-bottom:10px}
+.exp-card h3{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:5px}
+.exp-card p{font-size:12px;color:var(--sec);margin-bottom:14px}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(10,20,80,.45);z-index:999;align-items:center;justify-content:center}
+.modal-bg.show{display:flex}
+.modal-box{background:var(--white);border-radius:14px;padding:24px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.modal-title{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:8px}
+.modal-msg{font-size:13px;color:var(--sec);margin-bottom:20px;line-height:1.5}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+/* FOOTER */
+.det-footer{padding:12px 22px;background:var(--white);border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-shrink:0}
+.det-footer .sp{flex:1}
+.prog{font-size:11.5px;color:var(--sec);font-weight:700}
+
+/* PRINT */
+@media print{
+  html,body{height:auto!important;overflow:visible!important}
+  .main{display:block!important;overflow:visible!important;height:auto!important}
+  .content{display:block!important;overflow:visible!important;padding:8px!important;height:auto!important;flex:none!important}
+  .topbar,.sidebar,.det-footer,.btn,.btn-p,.btn-s,.btn-d,.setup-wrap,.modal-bg{display:none!important}
+  #view-inventario,#view-detalle,#view-roadmap,#view-exportar,#view-setup{display:none!important}
+  #view-print{display:block!important}
+  .ps{page-break-inside:avoid;margin-bottom:18px}
+  .ph{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:8px;border-bottom:2px solid #1226A8;margin-bottom:16px}
+  table{width:100%;border-collapse:collapse;font-size:9.5px}
+  th{background:#1226A8!important;color:white!important;padding:5px 7px;text-align:left;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  td{padding:5px 7px;border-bottom:1px solid #e5e7eb;vertical-align:top}
+}
+#view-print{display:none}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">o<span>S</span>de</div>
+  <div class="tsep"></div>
+  <span style="font-size:12px;font-weight:600;opacity:.7">Mesa de Trabajo</span>
+  <div class="tsep"></div>
+  <button class="seg-btn" id="sbB2B" onclick="clickSeg('B2B')">B2B</button>
+  <button class="seg-btn" id="sbB2C" onclick="clickSeg('B2C')">B2C</button>
+  <button class="seg-btn" id="sbBajas" onclick="clickSeg('Bajas')">Bajas</button>
+  <div class="topbar-right">
+    <div class="sbadge">Iniciativas: <span class="n" id="cTotal">0</span></div>
+    <div class="sbadge">Acciones: <span class="n" id="cActions">0</span></div>
+    <div class="sbadge">Completas: <span class="n" id="cDone">0</span></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <div class="modal-title" id="mTitle"></div>
+    <div class="modal-msg" id="mMsg"></div>
+    <div class="modal-actions" id="mActions"></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="mainWrap">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar" style="display:none">
+    <div class="ss">Vistas</div>
+    <div class="si" id="nInv" onclick="goV('inventario')"><div class="ico" style="background:#eef2ff">📋</div>Inventario</div>
+    <div class="si" id="nRoad" onclick="goV('roadmap')"><div class="ico" style="background:#f3eeff">📊</div>Roadmap</div>
+    <div class="si" id="nExp" onclick="goV('exportar')"><div class="ico" style="background:#ecfdf5">📤</div>Exportar</div>
+    <div style="height:1px;background:var(--border);margin:4px 0"></div>
+    <div class="ss">Iniciativas</div>
+    <div class="s-inits" id="sidebarList"></div>
+    <div class="s-add">
+      <button class="btn btn-p" style="width:100%;justify-content:center;margin-bottom:8px" onclick="addInit()">+ Nueva iniciativa</button>
+      <button class="btn btn-s btn-sm" style="width:100%;justify-content:center;font-size:11px;color:var(--sec)" onclick="reiniciar()">↺ Reiniciar sesión</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content" id="content">
+
+    <!-- SETUP -->
+    <div id="view-setup" class="setup-wrap">
+      <div class="pt">Mesa de Trabajo — Facilitador</div>
+      <div class="ps" style="text-align:center;margin-bottom:32px">Seleccioná el segmento para comenzar</div>
+      <div class="setup-cards">
+        <div class="setup-card" onclick="clickSeg('B2B')"><div class="sc-icon">🏢</div>Segmento B2B</div>
+        <div class="setup-card" onclick="clickSeg('B2C')"><div class="sc-icon">👤</div>Segmento B2C</div>
+        <div class="setup-card" onclick="clickSeg('Bajas')"><div class="sc-icon">🛡</div>Segmento Bajas</div>
+      </div>
+    </div>
+
+    <!-- INVENTARIO -->
+    <div id="view-inventario" style="display:none">
+      <div class="norte-banner" id="norteBanner">
+        <div class="nl">Ambición estratégica — los 3 segmentos</div>
+        <div class="nt" id="ambiText" style="font-size:12px;opacity:.88;margin-bottom:14px;line-height:1.55"></div>
+        <div style="height:1px;background:rgba(255,255,255,.25);margin-bottom:12px"></div>
+        <div class="nl">Norte del segmento</div>
+        <div class="nt" id="norteText"></div>
+      </div>
+      <div style="background:#ecfdf5;border:1px solid #a7f3d0;border-radius:8px;padding:8px 14px;font-size:11.5px;color:#065f46;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+        💾 Los datos se guardan automáticamente en este navegador. Si volvés a abrir la herramienta desde la misma URL, encontrás todo como lo dejaste.
+      </div>
+      <div class="pt" id="invTitle">Iniciativas</div>
+      <div class="ps">Hacé click en una iniciativa para completar el detalle. Las iniciativas están pre-cargadas del plan estratégico.</div>
+      <div id="guardrailsWrap"></div>
+      <div class="card" style="padding:13px 15px">
+        <div style="display:flex;gap:8px;align-items:flex-end">
+          <div class="f" style="flex:2"><label>Nombre de nueva iniciativa</label><input type="text" id="qName" placeholder="Agregá una iniciativa adicional..." onkeydown="if(event.key==='Enter')qAdd()"></div>
+          <div class="f" style="flex:1"><label>Foco</label>
+            <select id="qFoco">
+              <option value="">— Foco —</option>
+              <option value="Altas">🚀 Altas</option>
+              <option value="Bajas">🛡 Bajas</option>
+              <option value="Upgrade">⚙ Upgrade</option>
+              <option value="Experiencia">✨ Experiencia</option>
+            </select>
+          </div>
+          <button class="btn btn-p" onclick="qAdd()">+ Agregar</button>
+        </div>
+      </div>
+      <div id="initGrid"></div>
+    </div>
+
+    <!-- DETALLE -->
+    <div id="view-detalle" style="display:none">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+        <button class="btn btn-s btn-sm" onclick="goV('inventario')">← Volver</button>
+        <div class="pt" id="detTitle" style="margin-bottom:0;flex:1">Detalle</div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button class="btn btn-s btn-sm" onclick="prevI()">‹</button>
+          <span id="detNav" style="font-size:11.5px;color:var(--sec);font-weight:700"></span>
+          <button class="btn btn-s btn-sm" onclick="nextI()">›</button>
+        </div>
+      </div>
+      <div class="ps" id="detSub"></div>
+
+      <!-- S1: Identificación -->
+      <div class="card">
+        <div class="ctitle"><div class="cdot"></div>1 — Identificación</div>
+        <div class="fr"><div class="f"><label>Nombre de la iniciativa</label><input type="text" id="f_nom" oninput="sf('nombre',this.value)"></div></div>
+        <div class="fr">
+          <div class="f"><label>Foco(s) estratégico(s)</label>
+            <div class="foco-grid" id="focoGrid"></div>
+            <div class="hint" id="focoHint" style="margin-top:6px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2: Alcance -->
+      <div class="card">
+        <div class="ctitle"><div class="cdot"></div>2 — Alcance</div>
+        <div class="fr fc"><div class="f"><label>Descripción</label><textarea id="f_desc" oninput="sf('descripcion',this.value)" placeholder="¿Qué se propone hacer concretamente?"></textarea></div></div>
+        <div class="fr fc"><div class="f"><label>Población objetivo</label><input type="text" id="f_pob" placeholder="¿A qué universo de socios o cuentas apunta?" oninput="sf('poblacionObjetivo',this.value)"></div></div>
+        <div class="pq"><strong>🔍 Para profundizar</strong>
+          · ¿Qué está explícitamente fuera del alcance de esta iniciativa? ¿Qué no vamos a hacer?<br>
+          · ¿Cuándo decimos que esta iniciativa está terminada? ¿Qué momento marca el fin?<br>
+          · ¿El área o los socios que más se benefician ya saben que esto está en agenda?
+        </div>
+      </div>
+
+      <!-- S3: Responsables por foco -->
+      <div class="card" id="respCard">
+        <div class="ctitle"><div class="cdot"></div>3 — Responsable(s)</div>
+        <div id="respByFoco"></div>
+        <div class="pq" style="margin-top:12px"><strong>🔍 Para profundizar</strong>
+          · ¿Qué pasa si el responsable no puede avanzar en algún momento? ¿Quién lo cubre?
+        </div>
+        <div class="fr fc" style="margin-top:10px">
+          <div class="f">
+            <label>Cobertura / respaldo</label>
+            <input type="text" id="f_cob" placeholder="¿Quién reemplaza o da soporte si el responsable no puede avanzar?" oninput="sf('cobertura',this.value)">
+          </div>
+        </div>
+      </div>
+
+      <!-- S4: ACCIONES CONCRETAS -->
+      <div class="card">
+        <div class="ctitle"><div class="cdot"></div>4 — Acciones concretas</div>
+        <div class="hint" style="margin-bottom:12px;font-size:11.5px;color:var(--sec)">Listá las acciones específicas para llevar adelante esta iniciativa. Para cada una: el primer paso concreto en 7 días y cómo sabemos que está lista.</div>
+        <div style="display:grid;grid-template-columns:1fr 155px 105px 105px auto;gap:8px;padding-bottom:6px;border-bottom:1.5px solid var(--border);margin-bottom:2px">
+          <span style="font-size:10px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.5px">Acción</span>
+          <span style="font-size:10px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.5px">Responsable</span>
+          <span style="font-size:10px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.5px">Horizonte</span>
+          <span style="font-size:10px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.5px">Status</span>
+          <span></span>
+        </div>
+        <div id="accionList"></div>
+        <div class="new-accion">
+          <input type="text" id="newAccNom" placeholder="+ Nueva acción (Enter para agregar)" onkeydown="if(event.key==='Enter')addAccion()">
+          <button class="btn btn-s btn-sm" onclick="addAccion()">Agregar</button>
+        </div>
+        <div class="pq" style="margin-top:12px"><strong>🔍 Para profundizar</strong>
+          · ¿Hay una acción que desbloquea todas las demás? Si existe, empieza por ahí.<br>
+          · ¿Cuáles pueden correr en paralelo? ¿Cuáles dependen de que algo externo esté listo primero?<br>
+          · ¿Qué acción tiene mayor riesgo de retrasarse? ¿Por qué?<br>
+          · Si el responsable tiene que hacer algo esta semana para que esto no quede en el aire, ¿qué es?
+        </div>
+      </div>
+
+      <!-- S5: Coordinación -->
+      <div class="card">
+        <div class="ctitle"><div class="cdot"></div>5 — Coordinación con la Mesa</div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <label class="tog"><input type="checkbox" id="f_coord" onchange="setCoord(this.checked)"><span class="tsl"></span></label>
+          <span style="font-size:13px;font-weight:600">Esta iniciativa necesita una decisión o apoyo de la Mesa / otra área</span>
+        </div>
+        <div id="coordDet" style="display:none;margin-top:12px">
+          <div class="f"><label>¿Qué necesita?</label><textarea id="f_coordDesc" placeholder="¿Qué decide quién, y para cuándo?" oninput="sf('descripcionCoordinacion',this.value)" style="min-height:56px"></textarea></div>
+        </div>
+        <div id="coordNA" style="margin-top:10px;padding:9px 12px;background:#ecfdf5;border-radius:8px;font-size:12px;font-weight:600;color:var(--green)">✅ Esta iniciativa puede avanzar de forma autónoma dentro del frente.</div>
+        <div class="pq" style="margin-top:12px"><strong>🔍 Para profundizar</strong>
+          · ¿Hay alguna decisión que necesitamos de la Mesa antes de poder arrancar con la primera acción?<br>
+          · ¿Hay algún área que necesita ser informada (aunque no involucrada) para evitar fricción más adelante?<br>
+          · ¿Esto requiere presupuesto o recursos que hoy no están asignados ni aprobados?
+        </div>
+      </div>
+
+      <!-- S6: Métricas -->
+      <div class="card">
+        <div class="ctitle"><div class="cdot"></div>6 — Métricas y resultados</div>
+        <div class="pq" style="margin-bottom:14px"><strong>🔍 Para profundizar</strong>
+          · ¿Con qué dato concreto sabemos que vamos bien? Si no podemos responder esto, la iniciativa no está lista.<br>
+          · ¿Hoy tenemos acceso a ese dato? ¿Quién lo produce y con qué frecuencia?<br>
+          · Si el indicador no se mueve en 60 días, ¿qué significa eso? ¿Error de ejecución o error de hipótesis?<br>
+          · ¿Cuál sería la señal de alerta temprana, antes de llegar al plazo, de que algo no está funcionando?
+        </div>
+        <div class="kpi-header">
+          <span>Indicador</span><span>Baseline</span><span>Target</span><span>Plazo</span><span></span>
+        </div>
+        <div id="kpiList"></div>
+        <div style="padding:8px 0 0;display:flex;gap:8px">
+          <input type="text" id="newKpiNom" placeholder="+ Otro indicador..." style="font-family:var(--font);font-size:12px;border:1.5px dashed var(--border);border-radius:7px;padding:6px 10px;background:var(--bg);outline:none;flex:1" onkeydown="if(event.key==='Enter')addKpi()">
+          <button class="btn btn-s btn-sm" onclick="addKpi()">Agregar</button>
+        </div>
+        <div class="fr fc" style="margin-top:12px">
+          <div class="f"><label>Criterio de éxito a 90 días</label><input type="text" id="f_crit" placeholder="¿Qué tiene que pasar en 90 días para decir que avanzamos?" oninput="sf('criterioExito',this.value)"></div>
+        </div>
+      </div>
+
+      <!-- S7: Notas -->
+      <div class="card">
+        <div class="ctitle"><div class="cdot"></div>7 — Notas de facilitación</div>
+        <div class="f"><label>Tensiones, dependencias y observaciones no clasificadas</label><textarea id="f_notas" oninput="sf('notas',this.value)" style="min-height:72px" placeholder="Espacio libre: lo que no entra en los campos anteriores, preguntas sin respuesta, cosas para retomar..."></textarea></div>
+      </div>
+      <div style="height:72px"></div>
+    </div>
+
+    <!-- CONEXIONES -->
+    <div id="view-conexiones" style="display:none">
+      <div class="pt">Conexiones entre iniciativas</div>
+      <div class="ps">Antes de armar el roadmap, revisá quién está en múltiples iniciativas y qué acciones se tocan entre sí.</div>
+      <div id="conxContent"></div>
+    </div>
+
+    <!-- ROADMAP / GANTT -->
+    <div id="view-roadmap" style="display:none">
+      <div class="pt">Roadmap del segmento</div>
+      <div class="ps" id="roadSub">Iniciativas y acciones organizadas por horizonte</div>
+      <div id="roadmapCols" class="rm-cols"></div>
+      <div class="card" style="margin-top:16px">
+        <div class="ctitle"><div class="cdot"></div>Necesidades de coordinación con la Mesa</div>
+        <div id="coordList"></div>
+      </div>
+    </div>
+
+    <!-- EXPORTAR -->
+    <div id="view-exportar" style="display:none">
+      <div class="pt">Exportar</div>
+      <div class="ps">Generá el entregable de la sesión</div>
+      <div class="exp-grid">
+        <div class="exp-card"><div class="ei">🖨️</div><h3>Imprimir / PDF</h3><p>Vista de impresión con tabla de iniciativas, acciones y roadmap. Usá Ctrl+P para guardar como PDF.</p><button class="btn btn-p" onclick="doPrint()">Preparar impresión</button></div>
+        <div class="exp-card"><div class="ei">📊</div><h3>Exportar CSV / Excel</h3><p>Tabla de iniciativas + acciones lista para abrir en Excel. Incluye todos los campos del plan.</p><button class="btn btn-p" onclick="doCSV()">Descargar archivo</button></div>
+      </div>
+      <div class="card"><div class="ctitle"><div class="cdot"></div>Resumen de sesión</div><div id="sumContent"></div></div>
+    </div>
+
+    <!-- PRINT VIEW -->
+    <div id="view-print">
+      <div class="ph"><div><div style="font-size:17px;font-weight:800;color:#1226A8" id="pTitle"></div><div style="font-size:11px;color:#888" id="pMeta"></div></div><div style="text-align:right;font-size:11px"><strong style="color:#1226A8">oSde</strong><br>possybl</div></div>
+      <div id="pNorte"></div>
+      <div id="pTable"></div>
+      <div id="pAcciones"></div>
+      <div id="pRoadmap"></div>
+      <div id="pCoord"></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- DETALLE FOOTER -->
+<div class="det-footer" id="detFooter" style="display:none">
+  <button class="btn btn-d btn-sm" onclick="delInit()">🗑 Eliminar</button>
+  <div class="sp"></div>
+  <span class="prog" id="detProg"></span>
+  <button class="btn btn-s btn-sm" onclick="goV('inventario')">← Inventario</button>
+  <button class="btn btn-p btn-sm" onclick="nextI()">Siguiente ›</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const FOCOS_B2B_B2C = ['Altas','Bajas','Upgrade','Experiencia'];
+const FOCOS_BAJAS   = ['Bajas'];
+
+const AMBI = 'CRECER de forma SOSTENIBLE, priorizando la calidad de la cartera, generando LEALTAD en los momentos clave del CICLO DE VIDA del socio, apalancados en nuestro ECOSISTEMA para que a través de nuestras distintas propuestas de valor nos permita PROFUNDIZAR nuestro LIDERAZGO del mercado, tanto en VOLUMEN de negocio, como marcar el paso en la INNOVACIÓN.';
+
+const SEG_DATA = {
+  B2B:{
+    norte:'Construir la propuesta comercial con productos sustentables en el tiempo, precio competitivo y un modelo de gestión diferenciado según el tamaño y tipo de cuenta.',
+    guardrails:['Relevar necesidades de regiones como input, antes de definir acciones específicas.'],
+    equipo:[
+      {n:'Juan Ruiz Bory',r:'Resp. Foco Altas / Upgrading'},
+      {n:'Mariana Carrega',r:'Resp. Foco Experiencia'},
+      {n:'Gabriela Caligaris',r:'Producto'},
+      {n:'Laura Pelaez',r:'Canales'},
+      {n:'Jose Ceretti',r:'Medición'},
+      {n:'Florencia Jara',r:'IC'},
+      {n:'Santi De Filippis',r:'Calidad de Proceso'},
+    ],
+    kpisBase:[
+      {n:'Crecimiento Neto',b:'',t:'',p:''},
+      {n:'Contribución Marginal',b:'',t:'',p:''},
+      {n:'Sostenibilidad de Cartera',b:'',t:'',p:''},
+      {n:'NPS Relacional',b:'',t:'',p:''},
+    ],
+    iniciativas:[
+      {nombre:'Diseñar el portfolio corporativo que OSDE necesita para 2027-2028',focos:['Altas','Upgrade','Experiencia'],desc:'Resolver rigidez de producto y precio sin comprometer rentabilidad de largo plazo.',pob:''},
+      {nombre:'Grandes y Estratégicas: producto a medida, curva sustentable y precio flexible',focos:['Altas'],desc:'Hoy la rigidez nos deja afuera de cuentas grandes. Necesitamos competir con propuesta diferenciada.',pob:'Cuentas grandes y estratégicas'},
+      {nombre:'Pymes: volumen con nueva curva',focos:['Altas'],desc:'El producto es competitivo. La palanca es foco comercial: prioridad en ganar CUIT nuevos con nueva curva.',pob:'Pymes — CUIT nuevos'},
+      {nombre:'Combos de beneficios facturables',focos:['Upgrade'],desc:'Convertir excedentes de aportes en valor visible para la empresa y el socio.',pob:''},
+      {nombre:'Migración vieja curva → nueva curva',focos:['Upgrade'],desc:'Definir criterios empresa por empresa para migración hacia nueva curva.',pob:''},
+      {nombre:'Modelo de gestión por cartera',focos:['Experiencia'],desc:'Definir cadencia y propósito del contacto según tipo de cuenta. El equipo ejecuta el modelo, no improvisa.',pob:''},
+    ]
+  },
+  B2C:{
+    norte:'Crecer con calidad: más altas con el perfil correcto, cartera que sube de plan y una experiencia que refuerza la decisión de quedarse.',
+    guardrails:['El upgrade no se mide por cantidad de cambios de plan sino por socios que suben a un plan con mayor contribución real. Evitar movimientos que parecen upgrade y no lo son.'],
+    equipo:[
+      {n:'Pablo Ertola',r:'Resp. Rutina / Altas'},
+      {n:'Pia Reumann',r:'Resp. Foco Upgrade'},
+      {n:'Mariana Tavella',r:'Resp. Foco Experiencia'},
+      {n:'Gabriela Caligaris',r:'Producto'},
+      {n:'Laura Pelaez',r:'Canales'},
+      {n:'Georgina Roccatagliata',r:'Marketing'},
+      {n:'Jose Ceretti',r:'Medición'},
+      {n:'Florencia Jara',r:'IC'},
+      {n:'Pablo Antoniutti',r:'Regiones'},
+    ],
+    kpisBase:[
+      {n:'Crecimiento Neto',b:'',t:'',p:''},
+      {n:'Contribución Marginal',b:'',t:'',p:''},
+      {n:'Sostenibilidad de Cartera',b:'',t:'',p:''},
+      {n:'NPS Relacional',b:'',t:'',p:''},
+    ],
+    iniciativas:[
+      {nombre:'Completar el portfolio de productos individuales con curva nueva',focos:['Altas','Upgrade'],desc:'Meta mayo 2027. Incluye el producto de transición para quien sale del mundo corporativo y hoy no tiene a dónde ir.',pob:''},
+      {nombre:'Elevar performance de Flux',focos:['Altas'],desc:'Más leads de calidad y mejor tasa de conversión. Prioridad inmediata — no requiere nuevo producto, requiere foco comercial y de marketing.',pob:''},
+      {nombre:'Traspasar a plan superior',focos:['Upgrade'],desc:'Identificar cuándo el upgrade es rentable para OSDE y tiene sentido para el socio.',pob:''},
+      {nombre:'Gestión proactiva de canales con prioridad en digital',focos:['Experiencia'],desc:'Identificar los momentos críticos del socio y asegurar que el canal responda antes de que el problema escale.',pob:''},
+    ]
+  },
+  Bajas:{
+    norte:'Reducir la fuga anticipándola: detectar señales tempranas, actuar antes de que la decisión esté tomada y tener una propuesta de valor real para ofrecer.',
+    guardrails:['Datos unificados por socio — no por contrato. Hoy la marca de retenible está en el contrato, no en la persona.'],
+    equipo:[
+      {n:'Mariana Tavella',r:'Resp. Rutina'},
+      {n:'Gabriela Caligaris',r:'Producto'},
+      {n:'Pablo Ertola',r:'Comercial / Canales'},
+      {n:'Georgina Roccatagliata',r:'Marketing'},
+      {n:'Jose Ceretti',r:'Medición'},
+      {n:'Florencia Jara',r:'IC'},
+      {n:'Pablo Antoniutti',r:'Regiones'},
+    ],
+    kpisBase:[
+      {n:'Total bajas retenibles',b:'',t:'117K',p:'abr 2027'},
+      {n:'Bajas retenibles proactivas',b:'',t:'47K',p:'abr 2027'},
+      {n:'Bajas retenidas proactivas',b:'',t:'18K (40%)',p:'abr 2027'},
+      {n:'Bajas retenibles reactivas',b:'',t:'70K',p:'abr 2027'},
+      {n:'Bajas retenidas reactivas',b:'',t:'A definir',p:'abr 2027'},
+    ],
+    iniciativas:[
+      {nombre:'Definir y gestionar bajas retenibles',focos:['Bajas'],desc:'Cerrar la definición de retenible. Gestionar ese universo de forma sistemática.',pob:''},
+      {nombre:'Modelo de gestión de bajas retenibles',focos:['Bajas'],desc:'Modelo centralizado con respuesta regional.',pob:''},
+      {nombre:'Gestión del predictivo de bajas',focos:['Bajas'],desc:'Anticiparse antes de que aparezca la señal. Detectar el riesgo y activar la propuesta antes de que la decisión esté tomada.',pob:''},
+      {nombre:'Propuesta de valor para retención + productos de transición',focos:['Bajas'],desc:'Identificar qué se le ofrece a quien está por irse.',pob:''},
+      {nombre:'Mirada local sobre prestaciones, producto y precio',focos:['Bajas'],desc:'En regiones donde la competencia tiene mejor precio o cobertura, la gestión necesita herramientas locales para negociar.',pob:''},
+    ]
+  }
+};
+
+const HMAP = {'30d':'30 días','60d':'60 días','90d':'90 días','6m':'6 meses','12m+':'+12 meses'};
+const HORIZONS = ['30d','60d','90d','6m','12m+'];
+const FOCOCOLOR = {Altas:'#E05C00',Bajas:'#1533D4',Upgrade:'#6B3FA0',Experiencia:'#007A8C'};
+const FOCOBG    = {Altas:'#fff3ed',Bajas:'#eef1ff',Upgrade:'#f3eeff',Experiencia:'#e6f5f6'};
+const STLABEL   = {idea:'💡 Idea',en_curso:'✅ En curso',pausada:'⏸ Pausada',bloqueada:'🔴 Bloqueada',pendiente:'Pendiente',completada:'✓ Completada'};
+const LSKEY = 'osde_mesa_v2';
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let SEG = null, VIEW = 'setup', INITS = [], CUR = -1;
+let SEG_MAP = { B2B:[], B2C:[], Bajas:[] };
+
+function saveCurrentSeg(){ if(SEG) SEG_MAP[SEG]=INITS; }
+
+function mkId(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+function mkInit(d={}){
+  const seg = SEG_DATA[SEG];
+  return {
+    id: mkId(),
+    nombre: d.nombre||'',
+    focos: d.focos||[],
+    status:'', freno:'',
+    descripcion: d.desc||'',
+    poblacionObjetivo: d.pob||'',
+    responsablesPorFoco:{},
+    cobertura:'',
+    acciones:[],
+    necesitaCoordinacion:false, descripcionCoordinacion:'',
+    kpis: seg ? seg.kpisBase.map(k=>({id:mkId(),nombre:k.n,baseline:k.b,target:k.t,plazo:k.p,fuente:'',base:true})) : [],
+    criterioExito:'', notas:''
+  };
+}
+
+function loadLS(){
+  try{
+    const d=JSON.parse(localStorage.getItem(LSKEY)||'{}');
+    SEG_MAP={ B2B:d.B2B||[], B2C:d.B2C||[], Bajas:d.Bajas||[] };
+    const s=d.seg||null;
+    if(s){ SEG=s; INITS=SEG_MAP[s]||[]; setSeg(s,true); }
+  }catch(e){}
+}
+function saveLS(){ saveCurrentSeg(); localStorage.setItem(LSKEY,JSON.stringify({seg:SEG,B2B:SEG_MAP.B2B,B2C:SEG_MAP.B2C,Bajas:SEG_MAP.Bajas})); }
+
+// ═══════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════
+function showModal(title,msg,buttons){
+  document.getElementById('mTitle').textContent=title;
+  document.getElementById('mMsg').innerHTML=msg;
+  const ac=document.getElementById('mActions');
+  ac.innerHTML='';
+  buttons.forEach(b=>{
+    const el=document.createElement('button');
+    el.className='btn '+(b.cls||'btn-s');
+    el.textContent=b.label;
+    el.onclick=()=>{ document.getElementById('modal').classList.remove('show'); b.cb&&b.cb(); };
+    ac.appendChild(el);
+  });
+  document.getElementById('modal').classList.add('show');
+}
+document.getElementById('modal').addEventListener('click',e=>{ if(e.target===document.getElementById('modal')) document.getElementById('modal').classList.remove('show'); });
+
+// ═══════════════════════════════════════════
+// SEGMENT
+// ═══════════════════════════════════════════
+function clickSeg(seg){
+  if(SEG===seg){ goV('inventario'); return; }
+  setSeg(seg,false);
+}
+
+function setSeg(seg,silent){
+  saveCurrentSeg();  // persist current segment data before switching
+  SEG=seg;
+  INITS=SEG_MAP[seg]||[];
+  CUR=-1;
+  ['B2B','B2C','Bajas'].forEach(s=>document.getElementById('sb'+s).classList.toggle('active',s===seg));
+  document.getElementById('sidebar').style.display='flex';
+  if(!silent){
+    if(!INITS.length){
+      loadPreset();
+    } else {
+      goV('inventario');
+    }
+  } else {
+    if(VIEW==='setup') goV('inventario');
+    else renderView();
+  }
+}
+
+function loadPreset(){
+  const d=SEG_DATA[SEG];
+  INITS = d.iniciativas.map(ini=>mkInit(ini));
+  SEG_MAP[SEG]=INITS;
+  saveLS();
+  goV('inventario');
+}
+
+// ═══════════════════════════════════════════
+// VIEWS
+// ═══════════════════════════════════════════
+const VIDS=['setup','inventario','detalle','roadmap','exportar'];
+function goV(v){
+  VIEW=v;
+  VIDS.forEach(id=>{ const el=document.getElementById('view-'+id); if(el) el.style.display=(id===v)?'block':'none'; });
+  ['nInv','nRoad','nExp'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
+  if(v==='inventario') document.getElementById('nInv').classList.add('active');
+  if(v==='roadmap')    document.getElementById('nRoad').classList.add('active');
+  if(v==='exportar')   document.getElementById('nExp').classList.add('active');
+  document.getElementById('detFooter').style.display=(v==='detalle')?'flex':'none';
+  renderView();
+}
+function renderView(){
+  renderSidebar(); updateStats();
+  if(VIEW==='inventario')  renderInv();
+  if(VIEW==='detalle')     renderDet();
+  if(VIEW==='roadmap')     renderRoadmap();
+  if(VIEW==='exportar')    renderExportar();
+}
+
+// ═══════════════════════════════════════════
+// INVENTARIO
+// ═══════════════════════════════════════════
+function qAdd(){
+  const n=document.getElementById('qName').value.trim();
+  const f=document.getElementById('qFoco').value;
+  if(!n) return;
+  const ini=mkInit({nombre:n,focos:f?[f]:[]});
+  INITS.push(ini); saveLS();
+  document.getElementById('qName').value='';
+  document.getElementById('qFoco').value='';
+  renderInv(); renderSidebar(); updateStats();
+}
+function addInit(){
+  const ini=mkInit();
+  INITS.push(ini);
+  CUR=INITS.length-1;
+  saveLS(); goV('detalle');
+}
+
+function renderInv(){
+  if(!SEG) return;
+  const sd=SEG_DATA[SEG];
+  document.getElementById('ambiText').textContent=AMBI;
+  document.getElementById('norteText').textContent=sd.norte;
+  document.getElementById('invTitle').textContent=`Iniciativas — Segmento ${SEG}`;
+  // guardrails
+  const gw=document.getElementById('guardrailsWrap');
+  gw.innerHTML=(sd.guardrails||[]).map(g=>`<div class="guardrail">⚠️ <span><strong>Guardrail:</strong> ${esc(g)}</span></div>`).join('');
+  // grid
+  const grid=document.getElementById('initGrid');
+  if(!INITS.length){ grid.innerHTML=`<div style="text-align:center;padding:40px;color:var(--sec)"><div style="font-size:36px;margin-bottom:10px">📋</div><p style="font-size:14px;font-weight:600">Sin iniciativas aún.</p></div>`; return; }
+  grid.innerHTML=INITS.map((ini,i)=>{
+    const c=comp(ini), dotc=c>=80?'done':c>30?'part':'none';
+    const focoTags=(ini.focos||[]).map(f=>`<span class="ft ${f}">${f}</span>`).join('');
+    const acCount=(ini.acciones||[]).length;
+    return `<div class="ic ${c>=80?'done':''}" onclick="openI(${i})">
+      <div class="ic-num">${i+1}</div>
+      <div class="ic-body">
+        <div class="ic-name">${esc(ini.nombre)||'<em>Sin nombre</em>'}</div>
+        <div class="ic-meta">${focoTags}${acCount?`<span style="font-size:10.5px;color:var(--sec);font-weight:600">${acCount} acción(es)</span>`:''}</div>
+      </div>
+      <div class="cdot2 ${dotc}" title="${c}% completo"></div>
+      <button class="btn btn-s btn-sm" onclick="event.stopPropagation();openI(${i})">Editar</button>
+      <button class="btn btn-d btn-xs" onclick="event.stopPropagation();confDel(${i})">🗑</button>
+    </div>`;
+  }).join('');
+}
+function openI(i){ CUR=i; goV('detalle'); }
+function confDel(i){
+  showModal('Eliminar iniciativa',`¿Eliminás "<strong>${esc(INITS[i].nombre)}</strong>"?`,[
+    {label:'Cancelar'},
+    {label:'Eliminar',cls:'btn-d',cb:()=>{ INITS.splice(i,1); saveLS(); renderInv(); renderSidebar(); updateStats(); }}
+  ]);
+}
+
+// ═══════════════════════════════════════════
+// DETALLE
+// ═══════════════════════════════════════════
+function renderDet(){
+  const ini=INITS[CUR]; if(!ini){ goV('inventario'); return; }
+  document.getElementById('detTitle').textContent=ini.nombre||'Nueva iniciativa';
+  document.getElementById('detSub').textContent=`Segmento ${SEG} · Iniciativa ${CUR+1} de ${INITS.length}`;
+  document.getElementById('detNav').textContent=`${CUR+1} / ${INITS.length}`;
+  document.getElementById('f_nom').value=ini.nombre||'';
+  document.getElementById('f_desc').value=ini.descripcion||'';
+  document.getElementById('f_pob').value=ini.poblacionObjetivo||'';
+  document.getElementById('f_coord').checked=ini.necesitaCoordinacion;
+  document.getElementById('f_coordDesc').value=ini.descripcionCoordinacion||'';
+  document.getElementById('f_cob').value=ini.cobertura||'';
+  document.getElementById('f_crit').value=ini.criterioExito||'';
+  document.getElementById('f_notas').value=ini.notas||'';
+  // focos
+  renderFocoGrid();
+  // coord
+  document.getElementById('coordDet').style.display=ini.necesitaCoordinacion?'block':'none';
+  document.getElementById('coordNA').style.display=ini.necesitaCoordinacion?'none':'block';
+  // resp
+  renderRespByFoco();
+  // acciones
+  renderAcciones();
+  // kpis
+  renderKpis();
+  // progress
+  document.getElementById('detProg').textContent=`Completitud: ${comp(ini)}%`;
+}
+
+function renderFocoGrid(){
+  const ini=INITS[CUR];
+  const seg=SEG_DATA[SEG];
+  const focos = SEG==='Bajas' ? FOCOS_BAJAS : FOCOS_B2B_B2C;
+  const grid=document.getElementById('focoGrid');
+  grid.innerHTML=focos.map(f=>`<button class="fb ${f} ${(ini.focos||[]).includes(f)?'on':''}" data-f="${f}" onclick="toggleFoco('${f}')">${f}</button>`).join('');
+  const hint=document.getElementById('focoHint');
+  if(SEG==='Bajas'){ hint.textContent='Las iniciativas de Bajas aplican al foco Bajas.'; }
+  else if((ini.focos||[]).length>1){ hint.textContent='Iniciativa multi-foco: se asignará un responsable por cada foco seleccionado.'; }
+  else hint.textContent='';
+}
+
+function toggleFoco(f){
+  const ini=INITS[CUR];
+  if(SEG==='Bajas'){ ini.focos=['Bajas']; saveLS(); renderFocoGrid(); renderRespByFoco(); return; }
+  const idx=(ini.focos||[]).indexOf(f);
+  if(idx>=0) ini.focos.splice(idx,1);
+  else (ini.focos=ini.focos||[]).push(f);
+  saveLS(); renderFocoGrid(); renderRespByFoco(); updateStats();
+}
+
+function renderRespByFoco(){
+  const ini=INITS[CUR];
+  const sd=SEG_DATA[SEG];
+  const focos=(ini.focos&&ini.focos.length)?ini.focos:['—'];
+  const container=document.getElementById('respByFoco');
+  if(focos[0]==='—'){ container.innerHTML=`<div style="font-size:12.5px;color:var(--sec)">Seleccioná al menos un foco para asignar responsable.</div>`; return; }
+  const opts=sd.equipo.map(e=>`<option value="${esc(e.n)}">${esc(e.n)} (${esc(e.r)})</option>`).join('');
+  container.innerHTML=`<div class="resp-foco-grid">
+    ${focos.map(f=>{
+      const val=(ini.responsablesPorFoco||{})[f]||'';
+      const color=FOCOCOLOR[f]||'var(--navy)';
+      return `<div class="resp-foco-item">
+        <label style="color:${color}">${f}</label>
+        <select data-foco="${f}" onchange="setRespFoco('${f}',this.value)">
+          <option value="">— Seleccioná —</option>
+          ${opts}
+          <option value="__otro">Otro…</option>
+          ${val&&!sd.equipo.find(e=>e.n===val)?`<option value="${esc(val)}" selected>${esc(val)}</option>`:''}
+        </select>
+        ${val?`<div style="font-size:10px;color:var(--sec);margin-top:2px;font-weight:600">${esc(val)}</div>`:''}
+      </div>`;
+    }).join('')}
+  </div>`;
+  // restore selections
+  focos.forEach(f=>{
+    const val=(ini.responsablesPorFoco||{})[f]||'';
+    const sel=container.querySelector(`select[data-foco="${f}"]`);
+    if(sel&&val){
+      const found=[...sel.options].find(o=>o.value===val);
+      if(found) sel.value=val;
+    }
+  });
+}
+
+function setRespFoco(foco,val){
+  const ini=INITS[CUR];
+  if(!ini.responsablesPorFoco) ini.responsablesPorFoco={};
+  if(val==='__otro'){
+    showModal('Responsable libre',`Ingresá el nombre del responsable para el foco <strong>${foco}</strong>:`,[
+      {label:'Cancelar'},
+      {label:'Guardar',cls:'btn-p',cb:()=>{
+        const v=document.getElementById('otroRespInput').value.trim();
+        if(v){ ini.responsablesPorFoco[foco]=v; saveLS(); renderRespByFoco(); }
+      }}
+    ]);
+    document.getElementById('mMsg').innerHTML+=`<br><input id="otroRespInput" style="margin-top:10px;width:100%;font-family:var(--font);font-size:13px;border:1.5px solid #C8D4F4;border-radius:8px;padding:8px 11px;outline:none" placeholder="Nombre completo">`;
+    return;
+  }
+  ini.responsablesPorFoco[foco]=val;
+  saveLS(); renderRespByFoco(); updateStats();
+}
+
+// ── ACCIONES ──
+function renderAcciones(){
+  const ini=INITS[CUR];
+  const sd=SEG_DATA[SEG];
+  const opts=sd.equipo.map(e=>`<option value="${esc(e.n)}">${esc(e.n)}</option>`).join('');
+  const hOpts=HORIZONS.map(h=>`<option value="${h}">${HMAP[h]}</option>`).join('');
+  const stOpts=['pendiente','en_curso','completada','bloqueada'].map(s=>`<option value="${s}">${STLABEL[s]}</option>`).join('');
+  const list=document.getElementById('accionList');
+  const acc=ini.acciones||[];
+  if(!acc.length){ list.innerHTML=`<div style="font-size:12px;color:var(--sec);padding:8px 0;font-style:italic">Sin acciones definidas aún.</div>`; return; }
+  list.innerHTML=acc.map((a,ai)=>`
+    <div class="accion-row">
+      <div class="accion-num">${ai+1}</div>
+      <div class="accion-main">
+        <div class="accion-top">
+          <input type="text" value="${esc(a.nombre)}" placeholder="Nombre de la acción" data-ai="${ai}" data-field="nombre" onchange="saveAccionField(${ai},'nombre',this.value)">
+          <select data-ai="${ai}" data-field="responsable" onchange="saveAccionField(${ai},'responsable',this.value)">
+            <option value="">— Responsable —</option>
+            ${opts}
+            ${a.responsable&&!sd.equipo.find(e=>e.n===a.responsable)?`<option value="${esc(a.responsable)}">${esc(a.responsable)}</option>`:''}
+          </select>
+          <select data-ai="${ai}" data-field="horizonte" onchange="saveAccionField(${ai},'horizonte',this.value)">
+            <option value="">— Horizonte —</option>
+            ${hOpts}
+          </select>
+          <select data-ai="${ai}" data-field="status" onchange="saveAccionField(${ai},'status',this.value)">
+            ${stOpts}
+          </select>
+          <button class="btn btn-d btn-xs" onclick="delAccion(${ai})">×</button>
+        </div>
+        <div class="accion-sub">
+          <input type="text" value="${esc(a.primerPaso||'')}" placeholder="🎯 Primer paso en los próximos 7 días: ¿qué hace el responsable para que arranque?" data-ai="${ai}" data-field="primerPaso" onchange="saveAccionField(${ai},'primerPaso',this.value)">
+          <input type="text" value="${esc(a.criterioCierre||'')}" placeholder="✓ Criterio de cierre: ¿cómo sabemos que esta acción está terminada?" data-ai="${ai}" data-field="criterioCierre" onchange="saveAccionField(${ai},'criterioCierre',this.value)">
+        </div>
+      </div>
+    </div>`).join('');
+  // restore selects
+  acc.forEach((a,ai)=>{
+    const hr=list.querySelector(`[data-ai="${ai}"][data-field="horizonte"]`); if(hr&&a.horizonte) hr.value=a.horizonte;
+    const rr=list.querySelector(`[data-ai="${ai}"][data-field="responsable"]`); if(rr&&a.responsable){const f=[...rr.options].find(o=>o.value===a.responsable);if(f)rr.value=a.responsable;}
+    const sr=list.querySelector(`[data-ai="${ai}"][data-field="status"]`); if(sr&&a.status) sr.value=a.status;
+  });
+}
+function addAccion(){
+  const n=document.getElementById('newAccNom').value.trim();
+  if(!n) return;
+  const ini=INITS[CUR];
+  ini.acciones=ini.acciones||[];
+  ini.acciones.push({id:mkId(),nombre:n,responsable:'',horizonte:'',status:'pendiente',primerPaso:'',criterioCierre:''});
+  document.getElementById('newAccNom').value='';
+  saveLS(); renderAcciones(); updateStats();
+}
+function saveAccionField(ai,field,val){
+  const ini=INITS[CUR];
+  if(ini.acciones&&ini.acciones[ai]) ini.acciones[ai][field]=val;
+  saveLS(); updateStats();
+}
+function delAccion(ai){
+  INITS[CUR].acciones.splice(ai,1);
+  saveLS(); renderAcciones(); updateStats();
+}
+
+// ── KPIs ──
+function renderKpis(){
+  const ini=INITS[CUR];
+  const list=document.getElementById('kpiList');
+  const kpis=ini.kpis||[];
+  list.innerHTML=kpis.map((k,ki)=>`
+    <div class="kpi-row ${k.base?'base':''}">
+      <input type="text" class="kpi-name-f ${k.base?'':'editable'}" value="${esc(k.nombre)}" ${k.base?'readonly':''} data-ki="${ki}" onchange="saveKpi(${ki},'nombre',this.value)" placeholder="Indicador">
+      <input type="text" value="${esc(k.baseline)}" data-ki="${ki}" onchange="saveKpi(${ki},'baseline',this.value)" placeholder="Baseline">
+      <input type="text" value="${esc(k.target)}" data-ki="${ki}" onchange="saveKpi(${ki},'target',this.value)" placeholder="Target">
+      <input type="text" value="${esc(k.plazo)}" data-ki="${ki}" onchange="saveKpi(${ki},'plazo',this.value)" placeholder="Plazo">
+      <button class="btn btn-d btn-xs" onclick="delKpi(${ki})">×</button>
+    </div>`).join('');
+}
+function addKpi(){
+  const n=document.getElementById('newKpiNom').value.trim(); if(!n) return;
+  const ini=INITS[CUR];
+  ini.kpis=ini.kpis||[];
+  ini.kpis.push({id:mkId(),nombre:n,baseline:'',target:'',plazo:'',fuente:'',base:false});
+  document.getElementById('newKpiNom').value='';
+  saveLS(); renderKpis();
+}
+function saveKpi(ki,field,val){ const ini=INITS[CUR]; if(ini.kpis&&ini.kpis[ki]) ini.kpis[ki][field]=val; saveLS(); }
+function delKpi(ki){ INITS[CUR].kpis.splice(ki,1); saveLS(); renderKpis(); }
+
+// ── GENERIC SAVE ──
+function sf(key,val){
+  if(CUR<0||CUR>=INITS.length) return;
+  INITS[CUR][key]=val;
+  if(key==='nombre'){ document.getElementById('detTitle').textContent=val||'Nueva iniciativa'; renderSidebar(); }
+  saveLS(); document.getElementById('detProg').textContent=`Completitud: ${comp(INITS[CUR])}%`; updateStats();
+}
+function setSt(s){
+  INITS[CUR].status=s;
+  document.querySelectorAll('.sb2').forEach(b=>b.classList.toggle('on',b.dataset.s===s));
+  document.getElementById('frenoR').style.display=(s==='bloqueada'||s==='pausada')?'flex':'none';
+  saveLS(); updateStats();
+}
+function setCoord(c){
+  INITS[CUR].necesitaCoordinacion=c;
+  document.getElementById('coordDet').style.display=c?'block':'none';
+  document.getElementById('coordNA').style.display=c?'none':'block';
+  saveLS();
+}
+function prevI(){ if(CUR>0){CUR--;renderDet();} }
+function nextI(){ if(CUR<INITS.length-1){CUR++;renderDet();} else goV('inventario'); }
+function delInit(){
+  showModal('Eliminar iniciativa',`¿Eliminás "<strong>${esc(INITS[CUR]?.nombre)}</strong>"?`,[
+    {label:'Cancelar'},
+    {label:'Eliminar',cls:'btn-d',cb:()=>{
+      INITS.splice(CUR,1); saveLS();
+      if(!INITS.length){goV('inventario');return;}
+      if(CUR>=INITS.length) CUR=INITS.length-1;
+      renderDet(); renderSidebar(); updateStats();
+    }}
+  ]);
+}
+
+function renderConexiones(){
+  const content=document.getElementById('conxContent');
+  if(INITS.length<2){ content.innerHTML=`<div class="conn-alert info">ℹ️ Necesitás al menos 2 iniciativas para analizar conexiones.</div>`; return; }
+
+  let html=`<div class="ambi"><strong>Ambición estratégica — los 3 segmentos</strong>${esc(AMBI)}</div>`;
+
+  // ─── SECCIÓN 1: Responsables de múltiples iniciativas ───
+  const respMap={}; // person → [{i, foco}]
+  INITS.forEach((ini,i)=>{
+    Object.entries(ini.responsablesPorFoco||{}).forEach(([f,p])=>{
+      if(p){ (respMap[p]=respMap[p]||[]).push({i,f}); }
+    });
+  });
+  const multiResp=Object.entries(respMap).filter(([,l])=>l.length>1).sort((a,b)=>b[1].length-a[1].length);
+  const sd=SEG_DATA[SEG];
+
+  html+=`<div class="card"><div class="ctitle"><div class="cdot"></div>Personas responsables de más de una iniciativa</div>`;
+  if(!multiResp.length){
+    html+=`<div style="font-size:13px;color:var(--sec);padding:4px 0">Ninguna persona lidera más de una iniciativa aún. Completá los responsables por foco para ver esta sección.</div>`;
+  } else {
+    if(multiResp.some(([,l])=>l.length>=3)){
+      html+=`<div class="conn-alert warn" style="margin-bottom:12px">⚠️ Hay personas con responsabilidad en 3 o más iniciativas. Antes de cerrar el plan revisá si la carga es ejecutable.</div>`;
+    }
+    html+=`<div style="display:flex;flex-direction:column;gap:10px">`;
+    multiResp.forEach(([person,list])=>{
+      const rol=(sd.equipo.find(e=>e.n===person)||{}).r||'—';
+      html+=`<div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:var(--bg);border-radius:9px">
+        <div style="min-width:155px;flex-shrink:0">
+          <div style="font-size:13px;font-weight:800;color:var(--navy)">${esc(person)}</div>
+          <div style="font-size:10.5px;color:var(--sec);margin-top:2px">${esc(rol)}</div>
+          <div style="font-size:11px;font-weight:700;color:${list.length>=3?'var(--red)':'var(--amber)'};margin-top:5px">${list.length} iniciativas</div>
+        </div>
+        <div style="flex:1;display:flex;flex-wrap:wrap;gap:6px">
+          ${list.map(({i,f})=>{
+            const col=FOCOCOLOR[f]||'#888', bg2=FOCOBG[f]||'#f0f0f0';
+            return `<div onclick="openI(${i})" style="cursor:pointer;background:${bg2};border:1px solid ${col}44;border-radius:8px;padding:6px 11px;max-width:220px">
+              <div style="font-size:10px;font-weight:800;color:${col};text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Foco ${f}</div>
+              <div style="font-size:11.5px;font-weight:700;color:var(--text);line-height:1.3">#${i+1} ${esc(INITS[i].nombre.length>38?INITS[i].nombre.slice(0,38)+'…':INITS[i].nombre)}</div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+  html+=`</div>`;
+
+  // ─── SECCIÓN 2: Iniciativas que comparten foco ───
+  const focoGrp={};
+  INITS.forEach((ini,i)=>{ (ini.focos||[]).forEach(f=>{ (focoGrp[f]=focoGrp[f]||[]).push(i); }); });
+  const sharedF=Object.entries(focoGrp).filter(([,l])=>l.length>1);
+
+  html+=`<div class="card"><div class="ctitle"><div class="cdot"></div>Iniciativas que comparten foco — revisar superposición</div>`;
+  if(!sharedF.length){
+    html+=`<div style="font-size:13px;color:var(--sec)">Cada foco activo tiene una sola iniciativa asignada. Sin superposición detectada.</div>`;
+  } else {
+    html+=sharedF.map(([foco,idxs])=>{
+      const col=FOCOCOLOR[foco]||'#888', bg=FOCOBG[foco]||'#f0f0f0';
+      return `<div style="margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="background:${bg};color:${col};border:1px solid ${col}44;padding:3px 12px;border-radius:12px;font-size:11.5px;font-weight:800">${foco}</span>
+          <span style="font-size:11.5px;color:var(--sec);font-weight:600">${idxs.length} iniciativas sobre este foco</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          ${idxs.map(i=>{
+            const acts=(INITS[i].acciones||[]).length;
+            return `<div style="display:flex;gap:10px;align-items:center;padding:9px 13px;background:${bg};border-radius:7px;border:1px solid ${col}22;cursor:pointer" onclick="openI(${i})">
+              <span style="font-size:11px;font-weight:800;color:${col};flex-shrink:0">#${i+1}</span>
+              <div style="flex:1;font-size:12.5px;font-weight:700;color:var(--text)">${esc(INITS[i].nombre)}</div>
+              ${acts?`<span style="font-size:10.5px;color:var(--sec);flex-shrink:0">${acts} acciones</span>`:'<span style="font-size:10.5px;color:var(--amber);flex-shrink:0">sin acciones</span>'}
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="conn-alert info" style="margin-top:8px;font-size:11.5px">💬 ¿Hay acciones que se superponen? ¿Conviene que trabajen coordinadas o en secuencia?</div>
+      </div>`;
+    }).join('');
+  }
+  html+=`</div>`;
+
+  // ─── SECCIÓN 3: Carga de acciones por persona ───
+  const accMap={};
+  INITS.forEach((ini,i)=>{
+    (ini.acciones||[]).forEach(a=>{
+      if(a.responsable){ (accMap[a.responsable]=accMap[a.responsable]||[]).push({i,nombre:a.nombre,status:a.status,horizonte:a.horizonte}); }
+    });
+  });
+  const sortedAcc=Object.entries(accMap).sort((a,b)=>b[1].length-a[1].length);
+
+  html+=`<div class="card"><div class="ctitle"><div class="cdot"></div>Carga de acciones por persona</div>`;
+  if(!sortedAcc.length){
+    html+=`<div style="font-size:13px;color:var(--sec)">No hay acciones con responsable asignado todavía.</div>`;
+  } else {
+    const heavy=sortedAcc.filter(([,l])=>l.length>=3);
+    if(heavy.length){
+      html+=`<div class="conn-alert warn" style="margin-bottom:12px">⚠️ ${heavy.length} persona(s) tienen 3 o más acciones asignadas. Revisá si el plan es ejecutable o necesitás redistribuir.</div>`;
+    }
+    html+=`<div style="display:flex;flex-direction:column;gap:8px">`;
+    sortedAcc.forEach(([person,list])=>{
+      const byInit={};
+      list.forEach(x=>{ (byInit[x.i]=byInit[x.i]||[]).push(x); });
+      const total=list.length;
+      const alertCol=total>=5?'var(--red)':total>=3?'var(--amber)':'var(--green)';
+      html+=`<div style="padding:11px 13px;background:var(--bg);border-radius:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="font-size:13px;font-weight:800;color:var(--navy)">${esc(person)}</div>
+          <div style="font-size:11px;font-weight:800;color:${alertCol}">${total} acción(es)</div>
+        </div>
+        ${Object.entries(byInit).map(([idx,acts])=>{
+          const ini=INITS[idx];
+          const col=FOCOCOLOR[(ini.focos||[])[0]]||'#888';
+          return `<div style="margin-bottom:6px;padding-left:4px;border-left:3px solid ${col}55">
+            <div style="font-size:11px;font-weight:700;color:${col};margin-bottom:3px;padding-left:6px">→ #${Number(idx)+1} ${esc(ini.nombre.length>42?ini.nombre.slice(0,42)+'…':ini.nombre)}</div>
+            ${acts.map(a=>`<div style="font-size:11px;color:var(--sec);padding:2px 8px;display:flex;gap:8px">
+              <span style="color:var(--sec);font-size:10px;flex-shrink:0">${a.horizonte?HMAP[a.horizonte]:'—'}</span>
+              <span>${esc(a.nombre)}</span>
+            </div>`).join('')}
+          </div>`;
+        }).join('')}
+      </div>`;
+    });
+    html+=`</div>`;
+  }
+  html+=`</div>`;
+
+  content.innerHTML=html;
+}
+
+// ═══════════════════════════════════════════
+// ROADMAP / GANTT
+// ═══════════════════════════════════════════
+function renderRoadmap(){
+  document.getElementById('roadSub').textContent=`Segmento ${SEG} · ${INITS.length} iniciativas`;
+  const cols=document.getElementById('roadmapCols');
+  const hCls={'30d':'h30','60d':'h60','90d':'h90','6m':'h6m','12m+':'h12m'};
+  const tr=(s,n=50)=>s&&s.length>n?s.slice(0,n)+'…':s||'';
+
+  cols.innerHTML=HORIZONS.map(h=>{
+    const totalActs=INITS.reduce((s,ini)=>s+(ini.acciones||[]).filter(a=>a.horizonte===h).length,0);
+    const cards=INITS.map((ini,i)=>{
+      const acts=(ini.acciones||[]).filter(a=>a.horizonte===h);
+      if(!acts.length) return '';
+      const fc=(ini.focos||[])[0]||'';
+      const col=FOCOCOLOR[fc]||'#888';
+      const bg=FOCOBG[fc]||'#f5f5f5';
+      const stIcon={pendiente:'○',en_curso:'▶',completada:'✓',bloqueada:'✕'};
+      const stCol={pendiente:'var(--sec)',en_curso:col,completada:'var(--green)',bloqueada:'var(--red)'};
+      const actRows=acts.map(a=>`
+        <div style="display:flex;gap:7px;padding:5px 0;border-bottom:1px solid rgba(0,0,0,.05);align-items:flex-start">
+          <span style="font-size:11px;color:${stCol[a.status]||'var(--sec)'};flex-shrink:0;font-weight:800;margin-top:1px">${stIcon[a.status]||'○'}</span>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:11.5px;font-weight:600;color:var(--text);line-height:1.35">${esc(a.nombre)}</div>
+            ${a.responsable?`<div style="font-size:10px;color:var(--sec);margin-top:1px">👤 ${esc(a.responsable)}</div>`:''}
+            ${a.primerPaso?`<div style="font-size:10px;color:#6B7280;margin-top:2px;background:#f8f8ff;border-radius:4px;padding:2px 6px">🎯 ${esc(a.primerPaso)}</div>`:''}
+            ${a.criterioCierre?`<div style="font-size:10px;color:#6B7280;margin-top:2px;background:#f0fdf4;border-radius:4px;padding:2px 6px">✓ ${esc(a.criterioCierre)}</div>`:''}
+          </div>
+        </div>`).join('');
+      return `<div style="background:${bg};border:1px solid ${col}33;border-radius:9px;padding:10px 11px;cursor:pointer;transition:box-shadow .15s" onclick="openI(${i})" onmouseover="this.style.boxShadow='0 2px 10px ${col}33'" onmouseout="this.style.boxShadow='none'">
+        <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:7px">
+          <div style="flex:1;font-size:12px;font-weight:800;color:${col};line-height:1.3">${esc(tr(ini.nombre,50))}</div>
+          <span style="font-size:9.5px;font-weight:800;color:${col};background:white;border:1px solid ${col}44;border-radius:10px;padding:2px 7px;flex-shrink:0">#${i+1}</span>
+        </div>
+        ${actRows}
+      </div>`;
+    }).filter(Boolean).join('<div style="height:8px"></div>');
+
+    return `<div class="rm-col">
+      <div class="rm-col-hdr ${hCls[h]}">${HMAP[h]}<span style="font-size:10px;font-weight:600;opacity:.65">${totalActs} acc.</span></div>
+      <div class="rm-col-body">${cards||'<div style="font-size:11px;color:var(--sec);font-style:italic;text-align:center;padding:16px 8px">Sin acciones</div>'}</div>
+    </div>`;
+  }).join('');
+
+  // coord list
+  const cl=document.getElementById('coordList');
+  const ci=INITS.filter(i=>i.necesitaCoordinacion&&i.descripcionCoordinacion);
+  cl.innerHTML=ci.length?ci.map(ini=>`
+    <div style="padding:10px 0;border-bottom:1px solid var(--bg);display:flex;gap:10px;align-items:flex-start">
+      <div style="display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap">${(ini.focos||[]).map(f=>`<span class="ft ${f}">${f}</span>`).join('')}</div>
+      <div><div style="font-size:13px;font-weight:700;color:var(--navy)">${esc(ini.nombre)}</div><div style="font-size:12px;color:var(--sec);margin-top:3px">${esc(ini.descripcionCoordinacion)}</div></div>
+    </div>`).join(''):`<div style="font-size:13px;color:var(--sec)">No se registraron necesidades de coordinación.</div>`;
+}
+
+// ═══════════════════════════════════════════
+// EXPORTAR
+// ═══════════════════════════════════════════
+function renderExportar(){
+  const total=INITS.length;
+  const totalAcc=INITS.reduce((s,i)=>s+(i.acciones||[]).length,0);
+  const done=INITS.filter(i=>comp(i)>=80).length;
+  const coord=INITS.filter(i=>i.necesitaCoordinacion).length;
+  const sinH=INITS.filter(i=>!(i.acciones||[]).some(a=>a.horizonte)).length;
+  document.getElementById('sumContent').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px">
+      ${[['Iniciativas',total,'var(--navy)'],['Acciones',totalAcc,'var(--upgrade)'],['Completas (>80%)',done,'var(--green)'],['Necesitan Mesa',coord,'var(--amber)'],['Sin horizonte',sinH,'var(--sec)']].map(([l,v,c])=>`
+        <div style="background:var(--bg);border-radius:8px;padding:12px;text-align:center;border:1px solid var(--border)">
+          <div style="font-size:26px;font-weight:800;color:${c}">${v}</div>
+          <div style="font-size:10.5px;color:var(--sec);font-weight:600;margin-top:3px">${l}</div>
+        </div>`).join('')}
+    </div>
+    <div style="font-size:12px;color:var(--sec)">Segmento: <strong>${SEG}</strong> · ${new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})}</div>`;
+}
+
+function doPrint(){
+  const seg=SEG||'';
+  document.getElementById('pTitle').textContent=`Mesa de Trabajo — Segmento ${seg}`;
+  document.getElementById('pMeta').textContent=`${new Date().toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'})} · ${INITS.length} iniciativas`;
+  document.getElementById('pNorte').innerHTML=SEG_DATA[SEG]?`<div class="ps" style="padding:10px;background:#eef2fb;border-radius:8px;margin-bottom:12px;font-size:11px"><strong>Norte del segmento:</strong> ${esc(SEG_DATA[SEG].norte)}</div>`:'';
+
+  // Iniciativas table
+  const th='<tr><th>#</th><th>Iniciativa</th><th>Foco(s)</th><th>Responsables</th><th>Cobertura</th><th>Descripción</th><th>Criterio 90d</th><th>Coordinación</th></tr>';
+  const rows=INITS.map((ini,i)=>{
+    const resps=Object.entries(ini.responsablesPorFoco||{}).map(([f,p])=>`${f}: ${p}`).join(', ');
+    return `<tr><td>${i+1}</td><td><strong>${esc(ini.nombre)}</strong></td><td>${(ini.focos||[]).join(', ')}</td><td>${esc(resps)||'—'}</td><td>${esc(ini.cobertura)||'—'}</td><td>${esc(ini.descripcion)}</td><td>${esc(ini.criterioExito)||'—'}</td><td>${ini.necesitaCoordinacion?esc(ini.descripcionCoordinacion)||'Sí':'—'}</td></tr>`;
+  }).join('');
+  document.getElementById('pTable').innerHTML=`<div class="ps"><h3 style="font-size:13px;font-weight:800;color:#1226A8;margin-bottom:8px">Iniciativas</h3><table><thead>${th}</thead><tbody>${rows}</tbody></table></div>`;
+
+  // Acciones table
+  const ath='<tr><th>#</th><th>Iniciativa</th><th>Acción</th><th>Responsable</th><th>Horizonte</th><th>Status</th><th>Primer paso (7 días)</th><th>Criterio de cierre</th></tr>';
+  const arows=INITS.flatMap((ini,i)=>(ini.acciones||[]).map(a=>`<tr><td>${i+1}</td><td>${esc(ini.nombre)}</td><td>${esc(a.nombre)}</td><td>${esc(a.responsable)||'—'}</td><td>${HMAP[a.horizonte]||'—'}</td><td>${STLABEL[a.status]||'—'}</td><td>${esc(a.primerPaso)||'—'}</td><td>${esc(a.criterioCierre)||'—'}</td></tr>`)).join('');
+  document.getElementById('pAcciones').innerHTML=arows?`<div class="ps"><h3 style="font-size:13px;font-weight:800;color:#1226A8;margin-bottom:8px">Plan de acciones</h3><table><thead>${ath}</thead><tbody>${arows}</tbody></table></div>`:'';
+
+  // Roadmap summary
+  const rh='<tr><th>Horizonte</th><th>Iniciativa</th><th>Acciones en este horizonte</th><th>Responsable(s)</th></tr>';
+  const rrows=HORIZONS.flatMap(h=>INITS.filter(ini=>(ini.acciones||[]).some(a=>a.horizonte===h)).map(ini=>{
+    const acts=(ini.acciones||[]).filter(a=>a.horizonte===h);
+    return `<tr><td>${HMAP[h]}</td><td>${esc(ini.nombre)}</td><td>${acts.map(a=>esc(a.nombre)).join('; ')}</td><td>${[...new Set(acts.map(a=>a.responsable).filter(Boolean))].join(', ')||'—'}</td></tr>`;
+  })).join('');
+  document.getElementById('pRoadmap').innerHTML=rrows?`<div class="ps"><h3 style="font-size:13px;font-weight:800;color:#1226A8;margin-bottom:8px">Roadmap por horizonte</h3><table><thead>${rh}</thead><tbody>${rrows}</tbody></table></div>`:'';
+
+  // Coord
+  const ci=INITS.filter(i=>i.necesitaCoordinacion);
+  document.getElementById('pCoord').innerHTML=ci.length?`<div class="ps"><h3 style="font-size:13px;font-weight:800;color:#1226A8;margin-bottom:8px">Necesidades de coordinación</h3><table><thead><tr><th>Iniciativa</th><th>Foco(s)</th><th>¿Qué necesita?</th></tr></thead><tbody>${ci.map(i=>`<tr><td>${esc(i.nombre)}</td><td>${(i.focos||[]).join(', ')}</td><td>${esc(i.descripcionCoordinacion)||'—'}</td></tr>`).join('')}</tbody></table></div>`:'';
+
+  // Give the browser a tick to render before printing
+  setTimeout(()=>window.print(), 150);
+}
+
+function reiniciar(){
+  showModal('Reiniciar sesión','¿Qué querés reiniciar?',[
+    {label:'Cancelar'},
+    {label:`Solo ${SEG}`,cls:'btn-s',cb:()=>{
+      INITS=[]; SEG_MAP[SEG]=[]; saveLS();
+      loadPreset();
+    }},
+    {label:'Los 3 segmentos',cls:'btn-d',cb:()=>{
+      SEG_MAP={B2B:[],B2C:[],Bajas:[]};
+      INITS=[]; saveLS();
+      loadPreset();
+    }},
+  ]);
+}
+
+function doCSV(){
+  const h1=['#','Iniciativa','Foco(s)','Responsables','Cobertura','Descripción','Población objetivo','Necesita coordinación','Descripción coordinación','Criterio 90d','Notas'];
+  const r1=INITS.map((ini,i)=>[i+1,ini.nombre,(ini.focos||[]).join(' | '),Object.entries(ini.responsablesPorFoco||{}).map(([f,p])=>`${f}: ${p}`).join(' | '),ini.cobertura||'',ini.descripcion,ini.poblacionObjetivo,ini.necesitaCoordinacion?'Sí':'No',ini.descripcionCoordinacion||'',ini.criterioExito||'',ini.notas||'']);
+  const h2=['#','Iniciativa','Acción','Responsable','Horizonte','Status','Primer paso (7 días)','Criterio de cierre'];
+  const r2=INITS.flatMap((ini,i)=>(ini.acciones||[]).map(a=>[i+1,ini.nombre,a.nombre,a.responsable||'',HMAP[a.horizonte]||'',STLABEL[a.status]||'',a.primerPaso||'',a.criterioCierre||'']));
+  const hk=['Indicador','Baseline','Target','Plazo'];
+  const rk=INITS.flatMap(ini=>(ini.kpis||[]).map(k=>[ini.nombre,k.nombre,k.baseline||'',k.target||'',k.plazo||'']));
+  const hkFull=['Iniciativa',...hk];
+
+  const sheet=[
+    ['PLAN DE EJECUCIÓN — SEGMENTO '+SEG],['Generado: '+new Date().toLocaleDateString('es-AR')],[''],
+    ['=== INICIATIVAS ==='],h1,...r1,[''],
+    ['=== ACCIONES ==='],h2,...r2,[''],
+    ['=== MÉTRICAS ==='],hkFull,...rk,
+  ];
+  const csv=sheet.map(row=>row.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=`Plan_${SEG}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════════
+// SIDEBAR + STATS
+// ═══════════════════════════════════════════
+function renderSidebar(){
+  const list=document.getElementById('sidebarList');
+  if(!INITS.length){ list.innerHTML=`<div style="padding:10px 14px;font-size:11.5px;color:var(--sec)">Sin iniciativas</div>`; return; }
+  list.innerHTML=INITS.map((ini,i)=>{
+    const c=comp(ini);
+    const focoColors=(ini.focos||[]).map(f=>`<div class="fdot" style="background:${FOCOCOLOR[f]||'#888'}"></div>`).join('');
+    return `<div class="s-init ${VIEW==='detalle'&&CUR===i?'active':''} ${c>=80?'done':''}" onclick="openI(${i})">
+      <div class="s-init-name">${ini.nombre||'Sin nombre'}</div>
+      <div class="s-init-meta">${focoColors}${ini.horizonte?`<span>${HMAP[ini.horizonte]}</span>`:''}</div>
+    </div>`;
+  }).join('');
+}
+
+function updateStats(){
+  const total=INITS.length;
+  const acts=INITS.reduce((s,i)=>s+(i.acciones||[]).length,0);
+  const done=INITS.filter(i=>comp(i)>=80).length;
+  document.getElementById('cTotal').textContent=total;
+  document.getElementById('cActions').textContent=acts;
+  document.getElementById('cDone').textContent=done;
+}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function comp(ini){
+  const f=[ini.nombre,ini.focos&&ini.focos.length?'x':'',ini.descripcion,ini.poblacionObjetivo,Object.keys(ini.responsablesPorFoco||{}).length?'x':'',ini.acciones&&ini.acciones.length?'x':'',ini.kpis&&ini.kpis.some(k=>k.target)?'x':'',ini.criterioExito];
+  return Math.round(f.filter(v=>v&&String(v).trim()).length/f.length*100);
+}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ═══════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════
+loadLS();
+</script>
+</body>
+</html>
