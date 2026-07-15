@@ -228,6 +228,44 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
 
 /* EXPORT */
 .exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+
+/* BRIEFING */
+.brief-hero{background:linear-gradient(135deg,var(--dnavy) 0%,var(--navy) 70%);border-radius:12px;padding:24px 28px;margin-bottom:16px;position:relative;overflow:hidden}
+.brief-hero:before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:rgba(38,194,255,.07)}
+.brief-hero:after{content:'';position:absolute;bottom:-50px;right:80px;width:130px;height:130px;border-radius:50%;background:rgba(38,194,255,.05)}
+.brief-seg-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--cyan);margin-bottom:6px}
+.brief-norte{font-size:16px;font-weight:700;color:white;line-height:1.5;max-width:700px}
+.brief-ambi{background:#f8f9ff;border:1px solid var(--border);border-left:4px solid var(--cyan);border-radius:8px;padding:14px 18px;margin-bottom:16px}
+.brief-ambi-label{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--cyan);margin-bottom:6px}
+.brief-ambi-text{font-size:12.5px;color:var(--text);line-height:1.65;font-style:italic}
+.brief-section-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--sec);margin:16px 0 10px}
+.brief-kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin-bottom:4px}
+.brief-kpi-card{background:var(--white);border:1px solid var(--border);border-radius:9px;padding:12px 14px}
+.brief-kpi-name{font-size:10px;font-weight:700;color:var(--sec);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;line-height:1.3}
+.brief-kpi-vals{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.brief-kpi-base{font-size:13px;color:var(--sec);font-weight:600}
+.brief-kpi-arrow{font-size:14px;color:var(--cyan);font-weight:800}
+.brief-kpi-target{font-size:18px;font-weight:800;color:var(--navy)}
+.brief-kpi-plazo{font-size:10px;color:var(--sec);margin-top:4px}
+.brief-focos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:4px}
+.brief-foco-card{border-radius:10px;border:1px solid var(--border);overflow:hidden}
+.brief-foco-hdr{padding:10px 13px 8px}
+.brief-foco-tag{display:inline-block;padding:3px 10px;border-radius:10px;font-size:10.5px;font-weight:800;margin-bottom:5px}
+.brief-foco-title{font-size:12px;font-weight:800;color:var(--text);line-height:1.35}
+.brief-foco-desc{font-size:11px;color:var(--sec);line-height:1.5;padding:0 13px 10px}
+.brief-foco-kpis{padding:8px 13px 10px;border-top:1px solid var(--border)}
+.brief-foco-kpi{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:10.5px;color:var(--sec)}
+.brief-foco-kpi-val{font-weight:800;font-size:11px}
+.brief-init-row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--bg);align-items:flex-start}
+.brief-init-row:last-child{border-bottom:none}
+.brief-init-num{width:24px;height:24px;border-radius:50%;background:var(--navy);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.brief-init-body{flex:1}
+.brief-init-focos{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:4px}
+.brief-init-nombre{font-size:13px;font-weight:700;color:var(--text);line-height:1.35}
+.brief-init-desc{font-size:11.5px;color:var(--sec);margin-top:3px;line-height:1.4}
+.brief-cta{display:flex;justify-content:center;padding:24px 0 8px}
+.brief-cta button{background:var(--navy);color:white;font-family:var(--font);font-size:15px;font-weight:800;padding:14px 52px;border-radius:10px;border:none;cursor:pointer;transition:background .15s}
+.brief-cta button:hover{background:var(--dnavy)}
 .exp-card{background:var(--white);border-radius:12px;border:1px solid var(--border);padding:22px;text-align:center}
 .exp-card .ei{font-size:34px;margin-bottom:10px}
 .exp-card h3{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:5px}
@@ -401,6 +439,27 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);height:100vh
         <div class="setup-card" onclick="clickSeg('B2C')"><div class="sc-icon">👤</div>Segmento B2C</div>
         <div class="setup-card" onclick="clickSeg('Bajas')"><div class="sc-icon">🛡</div>Segmento Bajas</div>
       </div>
+    </div>
+
+    <!-- BRIEFING DEL SEGMENTO -->
+    <div id="view-briefing" style="display:none">
+      <div class="brief-hero">
+        <div class="brief-seg-name" id="bSegName"></div>
+        <div class="brief-norte" id="bNorte"></div>
+      </div>
+      <div class="brief-ambi">
+        <div class="brief-ambi-label">Dirección estratégica — los 3 segmentos</div>
+        <div class="brief-ambi-text" id="bAmbi"></div>
+      </div>
+      <div class="brief-section-title">KPIs del segmento</div>
+      <div id="bKpis" class="brief-kpi-grid"></div>
+      <div class="brief-section-title" id="bFocosTitle">Focos estratégicos activos</div>
+      <div id="bFocos" class="brief-focos-grid"></div>
+      <div class="brief-section-title">Iniciativas pre-cargadas</div>
+      <div id="bInits" class="card" style="padding:8px 16px"></div>
+      <div id="bGuardrails" style="margin-top:12px"></div>
+      <div class="brief-cta"><button onclick="startInventario()">Comenzar mesa de trabajo →</button></div>
+      <div style="height:20px"></div>
     </div>
 
     <!-- INVENTARIO -->
@@ -706,6 +765,83 @@ const FOCOBG    = {Altas:'#fff3ed',Bajas:'#eef1ff',Upgrade:'#f3eeff',Experiencia
 const STLABEL   = {idea:'💡 Idea',en_curso:'✅ En curso',pausada:'⏸ Pausada',bloqueada:'🔴 Bloqueada',pendiente:'Pendiente',completada:'✓ Completada'};
 const LSKEY = 'osde_mesa_v2';
 
+const FOCOS_INFO = {
+  Altas:{
+    title:'Captación selectiva basada en valor',
+    desc:'No toda alta tiene el mismo peso. Priorizar oportunidades donde OSDE tenga mayor probabilidad de construir permanencia, rentabilidad y vínculo de largo plazo.',
+    kpis:[
+      {n:'Cant. Altas',b:'192.744',t:'242.334',p:'abr 2027'},
+      {n:'Altas Netas',b:'21.177',t:'68.310',p:'abr 2027'},
+      {n:'Contribución Marginal esperada',b:'—',t:'30%',p:'abr 2027'},
+    ]
+  },
+  Bajas:{
+    title:'Gestión anticipatoria de la fuga',
+    desc:'La fuga no es aleatoria: se concentra en momentos predecibles. Identificar señales tempranas y actuar antes de que la decisión esté tomada.',
+    kpis:[
+      {n:'Total bajas retenibles',b:'70% s/total',t:'117K',p:'abr 2027'},
+      {n:'Bajas retenibles proactivas',b:'—',t:'47K',p:'abr 2027'},
+      {n:'Bajas retenidas proactivas',b:'40%',t:'18K',p:'abr 2027'},
+      {n:'Bajas retenibles reactivas',b:'—',t:'70K',p:'abr 2027'},
+      {n:'Bajas retenidas reactivas',b:'—',t:'A DEFINIR',p:'abr 2027'},
+    ]
+  },
+  Upgrade:{
+    title:'Activar el valor dormido de la cartera',
+    desc:'Acompañar al socio cuando cambian sus necesidades, ingresos o momento de vida. Identificar oportunidades para ofrecerle una cobertura más adecuada.',
+    kpis:[
+      {n:'Definición Playbook Upgrades',b:'—',t:'CREAR',p:'abr 2027'},
+      {n:'Movimientos a plan superior',b:'61.326',t:'A DEFINIR',p:'abr 2027'},
+    ]
+  },
+  Experiencia:{
+    title:'Dominar los momentos que definen la permanencia',
+    desc:'El socio evalúa a OSDE en momentos concretos: primer uso, reclamos, autorizaciones, renovación. Asegurar que esos momentos refuercen la decisión de quedarse.',
+    kpis:[
+      {n:'NPS Transaccional CAD',b:'38',t:'40',p:'may 2027'},
+      {n:'NPS Transaccional CAT',b:'45',t:'45',p:'may 2027'},
+      {n:'NPS Transaccional CAP',b:'63',t:'63',p:'may 2027'},
+      {n:'NPS Transaccional CGD',b:'35',t:'40',p:'may 2027'},
+      {n:'Nivel de Servicio CAD',b:'90%',t:'95%',p:'may 2027'},
+      {n:'Nivel de Servicio CAT',b:'69%',t:'70%',p:'may 2027'},
+    ]
+  },
+};
+
+const SEG_BRIEF_DATA = {
+  B2B:{
+    focosActivos:['Altas','Upgrade','Experiencia'],
+    kpisSegmento:[
+      {n:'Crecimiento Neto',b:'—',t:'+3%',p:'abr 2027'},
+      {n:'Contribución Marginal',b:'—',t:'12.8%',p:'abr 2027'},
+      {n:'Sostenibilidad de Cartera',b:'No definido',t:'CREAR',p:'abr 2027'},
+      {n:'NPS Relacional',b:'—',t:'30',p:'may 2027'},
+    ],
+  },
+  B2C:{
+    focosActivos:['Altas','Upgrade','Experiencia'],
+    kpisSegmento:[
+      {n:'Crecimiento Neto',b:'—',t:'+3%',p:'abr 2027'},
+      {n:'Contribución Marginal',b:'—',t:'12.8%',p:'abr 2027'},
+      {n:'Sostenibilidad de Cartera',b:'No definido',t:'CREAR',p:'abr 2027'},
+      {n:'NPS Relacional',b:'—',t:'30',p:'abr 2027'},
+    ],
+  },
+  Bajas:{
+    focosActivos:['Bajas'],
+    kpisSegmento:[
+      {n:'Crecimiento Neto',b:'—',t:'+3%',p:'abr 2027'},
+      {n:'Contribución Marginal',b:'—',t:'12.8%',p:'abr 2027'},
+      {n:'Sostenibilidad de Cartera',b:'No definido',t:'CREAR',p:'abr 2027'},
+      {n:'Total bajas retenibles',b:'70% s/total',t:'117K',p:'abr 2027'},
+      {n:'Bajas retenibles proactivas',b:'—',t:'47K',p:'abr 2027'},
+      {n:'Bajas retenidas proactivas',b:'40%',t:'18K',p:'abr 2027'},
+      {n:'Bajas retenibles reactivas',b:'—',t:'70K',p:'abr 2027'},
+      {n:'Bajas retenidas reactivas',b:'—',t:'A definir',p:'abr 2027'},
+    ],
+  },
+};
+
 // ═══════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════
@@ -808,22 +944,95 @@ function clickSeg(seg){
 }
 
 function setSeg(seg,silent){
-  saveCurrentSeg();  // persist current segment data before switching
+  saveCurrentSeg();
   SEG=seg;
   INITS=SEG_MAP[seg]||[];
   CUR=-1;
   ['B2B','B2C','Bajas'].forEach(s=>document.getElementById('sb'+s).classList.toggle('active',s===seg));
   document.getElementById('sidebar').style.display='flex';
   if(!silent){
-    if(!INITS.length){
-      loadPreset();
-    } else {
-      goV('inventario');
-    }
+    goV('briefing'); // Always show briefing when selecting a segment
   } else {
-    if(VIEW==='setup') goV('inventario');
+    if(VIEW==='setup'||VIEW==='bienvenida'||VIEW==='setup') goV('briefing');
     else renderView();
   }
+}
+
+function startInventario(){
+  if(!INITS.length){ loadPreset(); }
+  else { goV('inventario'); }
+}
+
+// ═══════════════════════════════════════════
+// BRIEFING
+// ═══════════════════════════════════════════
+function renderBriefing(){
+  const sd=SEG_DATA[SEG];
+  const bd=SEG_BRIEF_DATA[SEG];
+  if(!sd||!bd) return;
+
+  // Hero
+  document.getElementById('bSegName').textContent=`Segmento ${SEG}`;
+  document.getElementById('bNorte').textContent=sd.norte;
+  document.getElementById('bAmbi').textContent=AMBI;
+
+  // KPIs del segmento
+  document.getElementById('bKpis').innerHTML=bd.kpisSegmento.map(k=>`
+    <div class="brief-kpi-card">
+      <div class="brief-kpi-name">${esc(k.n)}</div>
+      <div class="brief-kpi-vals">
+        ${k.b&&k.b!=='—'?`<span class="brief-kpi-base">${esc(k.b)}</span><span class="brief-kpi-arrow">→</span>`:'<span class="brief-kpi-arrow">→</span>'}
+        <span class="brief-kpi-target">${esc(k.t)}</span>
+      </div>
+      <div class="brief-kpi-plazo">${esc(k.p)}</div>
+    </div>`).join('');
+
+  // Focos activos
+  document.getElementById('bFocos').innerHTML=(bd.focosActivos||[]).map(f=>{
+    const fi=FOCOS_INFO[f];
+    const col=FOCOCOLOR[f]||'#888';
+    const bg=FOCOBG[f]||'#f5f5f5';
+    if(!fi) return '';
+    const kpiRows=(fi.kpis||[]).map(k=>`
+      <div class="brief-foco-kpi">
+        <span>${esc(k.n)}</span>
+        <span class="brief-foco-kpi-val" style="color:${col}">
+          ${k.b&&k.b!=='—'?`<span style="color:var(--sec);font-weight:500">${esc(k.b)} → </span>`:''}
+          ${esc(k.t)}
+        </span>
+      </div>`).join('');
+    return `<div class="brief-foco-card">
+      <div class="brief-foco-hdr" style="background:${bg}30">
+        <div class="brief-foco-tag" style="background:${bg};color:${col}">${f}</div>
+        <div class="brief-foco-title">${esc(fi.title)}</div>
+      </div>
+      <div class="brief-foco-desc">${esc(fi.desc)}</div>
+      ${kpiRows?`<div class="brief-foco-kpis">${kpiRows}</div>`:''}
+    </div>`;
+  }).join('');
+
+  // Iniciativas
+  document.getElementById('bInits').innerHTML=sd.iniciativas.map((ini,i)=>{
+    const tags=(ini.focos||[]).map(f=>`<span class="ft ${f}">${f}</span>`).join('');
+    return `<div class="brief-init-row">
+      <div class="brief-init-num">${i+1}</div>
+      <div class="brief-init-body">
+        <div class="brief-init-focos">${tags}</div>
+        <div class="brief-init-nombre">${esc(ini.nombre)}</div>
+        ${ini.desc?`<div class="brief-init-desc">${esc(ini.desc)}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Guardrails
+  document.getElementById('bGuardrails').innerHTML=(sd.guardrails||[]).map(g=>
+    `<div class="guardrail">⚠️ <span><strong>Guardrail:</strong> ${esc(g)}</span></div>`
+  ).join('');
+
+  // If returning session, show note
+  const hasData=INITS.length>0;
+  const cta=document.querySelector('.brief-cta button');
+  if(cta) cta.textContent = hasData ? `Continuar con las ${INITS.length} iniciativas →` : 'Comenzar mesa de trabajo →';
 }
 
 function loadPreset(){
@@ -837,13 +1046,13 @@ function loadPreset(){
 // ═══════════════════════════════════════════
 // VIEWS
 // ═══════════════════════════════════════════
-const VIDS=['bienvenida','setup','inventario','detalle','roadmap','exportar'];
+const VIDS=['bienvenida','setup','briefing','inventario','detalle','roadmap','exportar'];
 function goV(v){
   VIEW=v;
   VIDS.forEach(id=>{ const el=document.getElementById('view-'+id); if(el) el.style.display=(id===v)?'block':'none'; });
   ['nBien','nInv','nRoad','nExp'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
   if(v==='bienvenida') document.getElementById('nBien').classList.add('active');
-  if(v==='inventario') document.getElementById('nInv').classList.add('active');
+  if(v==='inventario'||v==='briefing') document.getElementById('nInv').classList.add('active');
   if(v==='roadmap')    document.getElementById('nRoad').classList.add('active');
   if(v==='exportar')   document.getElementById('nExp').classList.add('active');
   document.getElementById('detFooter').style.display=(v==='detalle')?'flex':'none';
@@ -852,6 +1061,7 @@ function goV(v){
 function renderView(){
   renderSidebar(); updateStats();
   if(VIEW==='inventario')  renderInv();
+  if(VIEW==='briefing')    renderBriefing();
   if(VIEW==='detalle')     renderDet();
   if(VIEW==='roadmap')     renderRoadmap();
   if(VIEW==='exportar')    renderExportar();
